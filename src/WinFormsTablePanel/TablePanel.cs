@@ -23,15 +23,7 @@ public class TablePanel : UserControl
 
     public DefaultBoolean ShowGrid { get; set; } = DefaultBoolean.Default;
 
-    public void AddRow(TablePanelEntityStyle style, float height, bool visible = true)
-    {
-        var newRow = new TablePanelRow(style, height, visible);
-        for (int i = 0; i < columns.Count; i++)
-        {
-            newRow.Cells.Add(null);
-        }
-        rows.Add(newRow);
-    }
+
 
     public void AddColumn(TablePanelEntityStyle style, float width, bool visible = true)
     {
@@ -43,113 +35,193 @@ public class TablePanel : UserControl
         }
     }
 
-    public void SetCell(Control control, int row, int column)
+    public void ApplyStructure(TablePanelStructure structure)
     {
-        if (row >= rows.Count || column >= columns.Count)
+        foreach (var row in structure.Rows)
         {
-            throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
+            AddRow(row.Style, row.Height, row.Visible, row.Cells);
+        }
+
+        BuildLayout();
+    }
+
+
+    public void AddRow(TablePanelEntityStyle style, float height, bool visible, List<TablePanelCell> cells)
+    {
+        var rowIndex = rows.Count;
+        var newRow = new TablePanelRow(style, height, visible)
+        {
+            Cells = cells ?? new List<TablePanelCell>()
+        };
+        rows.Add(newRow);
+
+        // Добавляем ячейки в строку
+        for (int columnIndex = 0; columnIndex < newRow.Cells.Count; columnIndex++)
+        {
+            var cell = newRow.Cells[columnIndex];
+            if (cell != null)
+            {
+                Panel cellPanel = new Panel
+                {
+                    BackColor = cell.BackColor,
+                    Dock = DockStyle.Left,
+                    Visible = cell.Visible
+                };
+
+                if (!string.IsNullOrEmpty(cell.Text))
+                {
+                    Label label = new Label
+                    {
+                        Text = cell.Text,
+                        Dock = DockStyle.Fill,
+                        TextAlign = ContentAlignment.MiddleCenter
+                    };
+                    cellPanel.Controls.Add(label);
+                }
+
+                AddCell(rowIndex, columnIndex, cellPanel);
+            }
+        }
+    }
+    public void AddCell(int row, int column, Control control)
+    {
+        if (row >= rows.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(row), "Row index is out of range.");
         }
 
         var targetRow = rows[row];
-        targetRow.Cells[column] = control;
-        Controls.Add(control);
-    }
 
-    public void AddCell(int row, int column, Control control)
-    {
-        if (row >= rows.Count || column >= columns.Count)
+        // Убедимся, что количество ячеек в строке соответствует количеству столбцов
+        while (targetRow.Cells.Count <= column)
         {
-            throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
+            targetRow.Cells.Add(new TablePanelCell()); // Добавляем пустые ячейки, если их не хватает
         }
 
-        rows[row].Cells[column] = control;
+        // Устанавливаем Control в правильную ячейку
+        targetRow.Cells[column].Control = control;
     }
 
-    public void BuildLayout()
-    {
-        Controls.Clear();
 
-        // Создание строк и ячеек
-        for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
+    private void BuildLayout()
+    {
+        Controls.Clear(); // Очищаем все предыдущие элементы
+
+        // Проходим по строкам в обратном порядке и создаём их
+        for (int rowIndex = rows.Count - 1; rowIndex >= 0; rowIndex--)
         {
             var row = rows[rowIndex];
-            Panel rowPanel = null;
+            BuildRow(row); // Строим строку
+        }
+    }
 
-            if (row.Style == TablePanelEntityStyle.Absolute)
-            {
-                rowPanel = new()
+
+    private void BuildRow(TablePanelRow row)
+    {
+        Panel rowPanel = null;
+
+        switch (row.Style)
+        {
+            case TablePanelEntityStyle.Absolute:
+                rowPanel = new Panel
                 {
                     Height = (int)row.Height,
                     Dock = DockStyle.Top,
                     BackColor = row.Visible ? Color.LightBlue : Color.Transparent
                 };
                 Controls.Add(rowPanel);
-            }
-            else if (row.Style == TablePanelEntityStyle.Relative || row.Style == TablePanelEntityStyle.Fill)
-            {
-                rowPanel = new()
+                break;
+
+            case TablePanelEntityStyle.Relative:
+                rowPanel = new Panel
                 {
                     Dock = DockStyle.Top,
                     BackColor = row.Visible ? Color.LightGreen : Color.Transparent
                 };
                 Controls.Add(rowPanel);
-            }
-            else if (row.Style == TablePanelEntityStyle.Separator)
-            {
-                Splitter splitter = new()
+                break;
+
+            case TablePanelEntityStyle.Fill:
+                rowPanel = new Panel
+                {
+                    Dock = DockStyle.Fill,
+                    BackColor = row.Visible ? Color.LightGreen : Color.Transparent
+                };
+                Controls.Add(rowPanel);
+                break;
+
+            case TablePanelEntityStyle.Separator:
+                Splitter splitter = new Splitter
                 {
                     Dock = DockStyle.Top,
                     Height = 6,
                     BackColor = Color.Gray
                 };
                 Controls.Add(splitter);
-                continue;
-            }
-
-            // Добавление ячеек в строки
-            for (int columnIndex = 0; columnIndex < columns.Count; columnIndex++)
-            {
-                var cellControl = row.Cells[columnIndex];
-                if (cellControl != null)
-                {
-                    cellControl.Dock = DockStyle.Left;
-                    rowPanel.Controls.Add(cellControl);
-                }
-            }
+                return; // Пропускаем создание ячеек для разделителей
         }
 
-        // Создание колонок
-        foreach (var column in columns)
+        // Добавляем ячейки в строку
+        BuildCells(row, rowPanel);
+    }
+
+    private void BuildCells(TablePanelRow row, Panel rowPanel)
+    {
+        bool previousWasSeparator = false;
+
+        foreach (var cell in row.Cells.OfType<TablePanelCell>())
         {
-            if (column.Style == TablePanelEntityStyle.Absolute)
+            // Если предыдущий элемент был разделителем, добавляем его
+            if (previousWasSeparator)
             {
-                Panel colPanel = new()
-                {
-                    Width = (int)column.Width,
-                    Dock = DockStyle.Left,
-                    BackColor = column.Visible ? Color.LightYellow : Color.Transparent
-                };
-                Controls.Add(colPanel);
-            }
-            else if (column.Style == TablePanelEntityStyle.Relative || column.Style == TablePanelEntityStyle.Fill)
-            {
-                Panel colPanel = new()
-                {
-                    Dock = DockStyle.Left,
-                    BackColor = column.Visible ? Color.LightCoral : Color.Transparent
-                };
-                Controls.Add(colPanel);
-            }
-            else if (column.Style == TablePanelEntityStyle.Separator)
-            {
-                Splitter splitter = new()
+                var splitter = new Splitter
                 {
                     Dock = DockStyle.Left,
                     Width = 6,
                     BackColor = Color.Gray
                 };
-                Controls.Add(splitter);
+                rowPanel.Controls.Add(splitter);
+                splitter.BringToFront(); // Убедимся, что сплиттер отображается поверх
+                previousWasSeparator = false;
             }
+
+            // Если это разделитель, отмечаем, но не строим панель
+            if (cell.Style == TablePanelEntityStyle.Separator)
+            {
+                previousWasSeparator = true;
+                continue;
+            }
+
+            // Если это обычная ячейка, строим панель и добавляем её
+            var cellPanel = BuildCell(cell);
+            rowPanel.Controls.Add(cellPanel);
+            cellPanel.BringToFront(); // Убедимся, что панель отображается поверх
         }
+    }
+
+    private Panel BuildCell(TablePanelCell cell)
+    {
+        Panel cellPanel = new Panel
+        {
+            BackColor = cell.BackColor,
+            Dock = DockStyle.Left,
+            Visible = cell.Visible
+        };
+
+        if (!string.IsNullOrEmpty(cell.Text))
+        {
+            cellPanel.Controls.Add(new Label
+            {
+                Text = cell.Text,
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter
+            });
+        }
+        else if (cell.Control != null)
+        {
+            cellPanel.Controls.Add(cell.Control);
+        }
+
+        return cellPanel;
     }
 }
