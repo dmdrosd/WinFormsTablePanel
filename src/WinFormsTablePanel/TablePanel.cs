@@ -23,26 +23,6 @@ public class TablePanel : UserControl
 
     public DefaultBoolean ShowGrid { get; set; } = DefaultBoolean.Default;
 
-    public void AddRow(TablePanelEntityStyle style, float height, bool visible = true)
-    {
-        var newRow = new TablePanelRow(style, height, visible);
-        for (int i = 0; i < columns.Count; i++)
-        {
-            newRow.Cells.Add(null);
-        }
-        rows.Add(newRow);
-    }
-
-    public void AddColumn(TablePanelEntityStyle style, float width, bool visible = true)
-    {
-        var newColumn = new TablePanelColumn(style, width, visible);
-        columns.Add(newColumn);
-        foreach (var row in rows)
-        {
-            row.Cells.Add(null);
-        }
-    }
-
     public void SetCell(Control control, int row, int column)
     {
         if (row >= rows.Count || column >= columns.Count)
@@ -50,112 +30,78 @@ public class TablePanel : UserControl
             throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
         }
 
-        var targetRow = rows[row];
-        targetRow.Cells[column] = control;
-        Controls.Add(control);
+        rows[row].Cells[column] = new TablePanelCell { Control = control };
     }
 
-    public void AddCell(int row, int column, Control control)
+    public void BuildLayout(TablePanelStructure structure)
     {
-        if (row >= rows.Count || column >= columns.Count)
+        rows.Clear();
+        columns.Clear();
+
+        foreach (var row in structure.Rows)
         {
-            throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
+            rows.Add(row);
         }
 
-        rows[row].Cells[column] = control;
-    }
-
-    public void BuildLayout()
-    {
         Controls.Clear();
 
         // Создание строк и ячеек
-        foreach (var row in rows)
+        for (int i = rows.Count - 1; i >= 0; i--)
         {
-            Panel rowPanel = null;
+            var row = rows[i];
+            Panel? rowPanel = null;
 
-            switch (row.Style)
+            if (row.Style == TablePanelEntityStyle.Absolute)
             {
-                case TablePanelEntityStyle.Absolute:
-                    rowPanel = new()
-                    {
-                        Height = (int)row.Height,
-                        Dock = DockStyle.Top,
-                        BackColor = row.Visible ? Color.LightBlue : Color.Transparent
-                    };
-                    Controls.Add(rowPanel);
-                    break;
-                case TablePanelEntityStyle.Relative:
-                case TablePanelEntityStyle.Fill:
-                    rowPanel = new()
-                    {
-                        Dock = DockStyle.Top,
-                        BackColor = row.Visible ? Color.LightGreen : Color.Transparent
-                    };
-                    Controls.Add(rowPanel);
-                    break;
-                case TablePanelEntityStyle.Separator:
+                rowPanel = new()
                 {
-                    Splitter splitter = new()
-                    {
-                        Dock = DockStyle.Top,
-                        Height = 6,
-                        BackColor = Color.Gray
-                    };
-                    Controls.Add(splitter);
-                    continue;
-                }
+                    Height = (int)row.Height,
+                    Dock = DockStyle.Top,
+                    BackColor = row.Visible ? Color.CornflowerBlue : Color.Transparent
+                };
+                Controls.Add(rowPanel);
+            }
+            else if (row.Style == TablePanelEntityStyle.Relative)
+            {
+                rowPanel = new()
+                {
+                    Dock = DockStyle.Top,
+                    BackColor = row.Visible ? Color.MediumSeaGreen : Color.Transparent
+                };
+                Controls.Add(rowPanel);
+            }
+            else if (row.Style == TablePanelEntityStyle.Fill)
+            {
+                rowPanel = new()
+                {
+                    Dock = DockStyle.Fill,
+                    BackColor = row.Visible ? Color.LightSlateGray : Color.Transparent
+                };
+                Controls.Add(rowPanel);
+            }
+            else if (row.Style == TablePanelEntityStyle.Separator && i != rows.Count - 1)
+            {
+                Splitter splitter = new()
+                {
+                    Dock = DockStyle.Top,
+                    Height = 6,
+                    BackColor = Color.Gray
+                };
+                Controls.Add(splitter);
+                continue;
             }
 
-            // Добавление ячеек в строки
-            for (var columnIndex = 0; columnIndex < columns.Count; columnIndex++)
+            if (rowPanel != null)
             {
-                var cellControl = row.Cells[columnIndex];
-                if (cellControl != null)
+                // Добавление ячеек в строки
+                foreach (var cell in row.Cells)
                 {
-                    cellControl.Dock = DockStyle.Left;
-                    rowPanel.Controls.Add(cellControl);
-                }
-            }
-        }
-
-        // Создание колонок
-        foreach (var column in columns)
-        {
-            switch (column.Style)
-            {
-                case TablePanelEntityStyle.Absolute:
-                {
-                    Panel colPanel = new()
+                    var cellControl = cell?.Control;
+                    if (cellControl != null)
                     {
-                        Width = (int)column.Width,
-                        Dock = DockStyle.Left,
-                        BackColor = column.Visible ? Color.LightYellow : Color.Transparent
-                    };
-                    Controls.Add(colPanel);
-                    break;
-                }
-                case TablePanelEntityStyle.Relative:
-                case TablePanelEntityStyle.Fill:
-                {
-                    Panel colPanel = new()
-                    {
-                        Dock = DockStyle.Left,
-                        BackColor = column.Visible ? Color.LightCoral : Color.Transparent
-                    };
-                    Controls.Add(colPanel);
-                    break;
-                }
-                case TablePanelEntityStyle.Separator:
-                {
-                    Splitter splitter = new()
-                    {
-                        Dock = DockStyle.Left,
-                        Width = 6,
-                        BackColor = Color.Gray
-                    };
-                    Controls.Add(splitter);
-                    break;
+                        cellControl.Dock = DockStyle.Left;
+                        rowPanel.Controls.Add(cellControl);
+                    }
                 }
             }
         }
