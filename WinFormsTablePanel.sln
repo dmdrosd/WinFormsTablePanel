@@ -1,0 +1,44 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35208.52
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsApp", "samples\WinFormsApp\WinFormsApp.csproj", "{DEBD1ABB-FCD2-4281-91D0-2CE0814FA746}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0B5D54CA-8794-4B36-96D6-C486CF33D793}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "samples", "samples", "{AD26C26C-3D15-433A-A222-BE03C68D165C}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "dosc", "dosc", "{66EBBD0C-5303-40EE-B246-782135156AA8}"
+	ProjectSection(SolutionItems) = preProject
+		docs\README.md = docs\README.md
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WinFormsTablePanel", "src\WinFormsTablePanel\WinFormsTablePanel.csproj", "{4EA97AF8-BA44-4BA7-8CA0-B6E540BE91DC}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DEBD1ABB-FCD2-4281-91D0-2CE0814FA746}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEBD1ABB-FCD2-4281-91D0-2CE0814FA746}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEBD1ABB-FCD2-4281-91D0-2CE0814FA746}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEBD1ABB-FCD2-4281-91D0-2CE0814FA746}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4EA97AF8-BA44-4BA7-8CA0-B6E540BE91DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4EA97AF8-BA44-4BA7-8CA0-B6E540BE91DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4EA97AF8-BA44-4BA7-8CA0-B6E540BE91DC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4EA97AF8-BA44-4BA7-8CA0-B6E540BE91DC}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DEBD1ABB-FCD2-4281-91D0-2CE0814FA746} = {AD26C26C-3D15-433A-A222-BE03C68D165C}
+		{4EA97AF8-BA44-4BA7-8CA0-B6E540BE91DC} = {0B5D54CA-8794-4B36-96D6-C486CF33D793}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3FC4FE3E-E017-46D5-B4DB-BB7805EB6B20}
+	EndGlobalSection
+EndGlobal
