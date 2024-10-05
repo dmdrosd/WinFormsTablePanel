@@ -23,6 +23,26 @@ public class TablePanel : UserControl
 
     public DefaultBoolean ShowGrid { get; set; } = DefaultBoolean.Default;
 
+    public void AddRow(TablePanelEntityStyle style, float height, bool visible = true)
+    {
+        var newRow = new TablePanelRow(style, height, visible);
+        for (int i = 0; i < columns.Count; i++)
+        {
+            newRow.Cells.Add(null);
+        }
+        rows.Add(newRow);
+    }
+
+    public void AddColumn(TablePanelEntityStyle style, float width, bool visible = true)
+    {
+        var newColumn = new TablePanelColumn(style, width, visible);
+        columns.Add(newColumn);
+        foreach (var row in rows)
+        {
+            row.Cells.Add(null);
+        }
+    }
+
     public void SetCell(Control control, int row, int column)
     {
         if (row >= rows.Count || column >= columns.Count)
@@ -30,26 +50,30 @@ public class TablePanel : UserControl
             throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
         }
 
-        rows[row].Cells[column] = new TablePanelCell { Control = control };
+        var targetRow = rows[row];
+        targetRow.Cells[column] = control;
+        Controls.Add(control);
     }
 
-    public void BuildLayout(TablePanelStructure structure)
+    public void AddCell(int row, int column, Control control)
     {
-        rows.Clear();
-        columns.Clear();
-
-        foreach (var row in structure.Rows)
+        if (row >= rows.Count || column >= columns.Count)
         {
-            rows.Add(row);
+            throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
         }
 
+        rows[row].Cells[column] = control;
+    }
+
+    public void BuildLayout()
+    {
         Controls.Clear();
 
         // Создание строк и ячеек
-        for (int i = rows.Count - 1; i >= 0; i--)
+        for (int rowIndex = 0; rowIndex < rows.Count; rowIndex++)
         {
-            var row = rows[i];
-            Panel? rowPanel = null;
+            var row = rows[rowIndex];
+            Panel rowPanel = null;
 
             if (row.Style == TablePanelEntityStyle.Absolute)
             {
@@ -57,29 +81,20 @@ public class TablePanel : UserControl
                 {
                     Height = (int)row.Height,
                     Dock = DockStyle.Top,
-                    BackColor = row.Visible ? Color.CornflowerBlue : Color.Transparent
+                    BackColor = row.Visible ? Color.LightBlue : Color.Transparent
                 };
                 Controls.Add(rowPanel);
             }
-            else if (row.Style == TablePanelEntityStyle.Relative)
+            else if (row.Style == TablePanelEntityStyle.Relative || row.Style == TablePanelEntityStyle.Fill)
             {
                 rowPanel = new()
                 {
                     Dock = DockStyle.Top,
-                    BackColor = row.Visible ? Color.MediumSeaGreen : Color.Transparent
+                    BackColor = row.Visible ? Color.LightGreen : Color.Transparent
                 };
                 Controls.Add(rowPanel);
             }
-            else if (row.Style == TablePanelEntityStyle.Fill)
-            {
-                rowPanel = new()
-                {
-                    Dock = DockStyle.Fill,
-                    BackColor = row.Visible ? Color.LightSlateGray : Color.Transparent
-                };
-                Controls.Add(rowPanel);
-            }
-            else if (row.Style == TablePanelEntityStyle.Separator && i != rows.Count - 1)
+            else if (row.Style == TablePanelEntityStyle.Separator)
             {
                 Splitter splitter = new()
                 {
@@ -91,18 +106,49 @@ public class TablePanel : UserControl
                 continue;
             }
 
-            if (rowPanel != null)
+            // Добавление ячеек в строки
+            for (int columnIndex = 0; columnIndex < columns.Count; columnIndex++)
             {
-                // Добавление ячеек в строки
-                foreach (var cell in row.Cells)
+                var cellControl = row.Cells[columnIndex];
+                if (cellControl != null)
                 {
-                    var cellControl = cell?.Control;
-                    if (cellControl != null)
-                    {
-                        cellControl.Dock = DockStyle.Left;
-                        rowPanel.Controls.Add(cellControl);
-                    }
+                    cellControl.Dock = DockStyle.Left;
+                    rowPanel.Controls.Add(cellControl);
                 }
+            }
+        }
+
+        // Создание колонок
+        foreach (var column in columns)
+        {
+            if (column.Style == TablePanelEntityStyle.Absolute)
+            {
+                Panel colPanel = new()
+                {
+                    Width = (int)column.Width,
+                    Dock = DockStyle.Left,
+                    BackColor = column.Visible ? Color.LightYellow : Color.Transparent
+                };
+                Controls.Add(colPanel);
+            }
+            else if (column.Style == TablePanelEntityStyle.Relative || column.Style == TablePanelEntityStyle.Fill)
+            {
+                Panel colPanel = new()
+                {
+                    Dock = DockStyle.Left,
+                    BackColor = column.Visible ? Color.LightCoral : Color.Transparent
+                };
+                Controls.Add(colPanel);
+            }
+            else if (column.Style == TablePanelEntityStyle.Separator)
+            {
+                Splitter splitter = new()
+                {
+                    Dock = DockStyle.Left,
+                    Width = 6,
+                    BackColor = Color.Gray
+                };
+                Controls.Add(splitter);
             }
         }
     }
