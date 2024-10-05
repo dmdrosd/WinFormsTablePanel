@@ -1,41 +1,43 @@
-﻿using System.ComponentModel;
+﻿// TablePanel.cs
+using System.ComponentModel;
 
 namespace WinFormsTablePanel;
 
-public class TablePanel : UserControl
+public sealed class TablePanel : UserControl
 {
-    private TablePanelRowCollection rows;
-    private TablePanelColumnCollection columns;
+    private readonly TablePanelRowCollection _rows;
+    private readonly TablePanelColumnCollection _columns;
 
     public TablePanel()
     {
-        this.rows = new TablePanelRowCollection();
-        this.columns = new TablePanelColumnCollection();
-        this.Dock = DockStyle.Fill;
+        _rows = new TablePanelRowCollection();
+        _columns = new TablePanelColumnCollection();
+        Dock = DockStyle.Fill;
     }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public TablePanelRowCollection Rows => rows;
+    public TablePanelRowCollection Rows => _rows;
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public TablePanelColumnCollection Columns => columns;
+    public TablePanelColumnCollection Columns => _columns;
 
     public DefaultBoolean ShowGrid { get; set; } = DefaultBoolean.Default;
 
     public void AddRow(TablePanelEntityStyle style, float height, bool visible = true)
     {
         var newRow = new TablePanelRow(style, height, visible);
-        for (int i = 0; i < columns.Count; i++)
+        for (var i = 0; i < _columns.Count; i++)
         {
             newRow.Cells.Add(null);
         }
-        rows.Add(newRow);
+        _rows.Add(newRow);
     }
 
     public void AddColumn(TablePanelEntityStyle style, float width, bool visible = true)
     {
-        columns.Add(new TablePanelColumn(style, width, visible));
-        foreach (var row in rows)
+        var newColumn = new TablePanelColumn(style, width, visible);
+        _columns.Add(newColumn);
+        foreach (var row in _rows)
         {
             row.Cells.Add(null);
         }
@@ -43,46 +45,90 @@ public class TablePanel : UserControl
 
     public void SetCell(Control control, int row, int column)
     {
-        if (row >= rows.Count || column >= columns.Count)
-            throw new ArgumentOutOfRangeException("Row or column index is out of range.");
+        if (row >= _rows.Count || column >= _columns.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
+        }
 
-        var targetRow = rows[row];
+        var targetRow = _rows[row];
         targetRow.Cells[column] = control;
-        this.Controls.Add(control);
+        Controls.Add(control);
     }
 
     public void BuildLayout()
     {
-        this.Controls.Clear();
+        Controls.Clear();
 
-        foreach (var row in rows)
+        // Создание строк
+        foreach (var row in _rows)
         {
-            if (this.Controls.Count > 0)
+            if (row.Style == TablePanelEntityStyle.Absolute)
             {
-                Splitter splitter = new Splitter
+                Panel rowPanel = new()
+                {
+                    Height = (int)row.Height,
+                    Dock = DockStyle.Top,
+                    BackColor = row.Visible ? Color.LightBlue : Color.Transparent
+                };
+                Controls.Add(rowPanel);
+            }
+            else if (row.Style == TablePanelEntityStyle.Relative || row.Style == TablePanelEntityStyle.Fill)
+            {
+                Panel rowPanel = new()
+                {
+                    Dock = DockStyle.Top,
+                    BackColor = row.Visible ? Color.LightGreen : Color.Transparent
+                };
+                Controls.Add(rowPanel);
+            }
+            else if (row.Style == TablePanelEntityStyle.Separator)
+            {
+                Splitter splitter = new()
                 {
                     Dock = DockStyle.Top,
                     Height = 6,
                     BackColor = Color.Gray
                 };
-                this.Controls.Add(splitter);
+                Controls.Add(splitter);
             }
+        }
 
-            Panel rowPanel = new Panel
+        // Создание колонок
+        foreach (var column in _columns)
+        {
+            switch (column.Style)
             {
-                Dock = DockStyle.Top,
-                Height = row.Style == TablePanelEntityStyle.Absolute ? (int)row.Height : 0,
-                BackColor = row.Visible ? Color.LightBlue : Color.Transparent,
-                AutoSize = row.Style == TablePanelEntityStyle.AutoSize
-            };
-            this.Controls.Add(rowPanel);
-
-            foreach (var cell in row.Cells)
-            {
-                if (cell != null)
+                case TablePanelEntityStyle.Absolute:
                 {
-                    cell.Dock = DockStyle.Left;
-                    rowPanel.Controls.Add(cell);
+                    Panel colPanel = new()
+                    {
+                        Width = (int)column.Width,
+                        Dock = DockStyle.Left,
+                        BackColor = column.Visible ? Color.LightYellow : Color.Transparent
+                    };
+                    Controls.Add(colPanel);
+                    break;
+                }
+                case TablePanelEntityStyle.Relative or TablePanelEntityStyle.Fill:
+                {
+                    Panel colPanel = new()
+                    {
+                        Dock = DockStyle.Left,
+                        BackColor = column.Visible ? Color.LightCoral : Color.Transparent
+                    };
+                    Controls.Add(colPanel);
+                    break;
+                }
+                case TablePanelEntityStyle.Separator:
+                {
+                    Splitter splitter = new()
+                    {
+                        Dock = DockStyle.Left,
+                        Width = 6,
+                        BackColor = Color.Gray
+                    };
+                    Controls.Add(splitter);
+                    break;
                 }
             }
         }

@@ -2,8 +2,8 @@
 
 public enum TablePanelEntityStyle
 {
-    AutoSize,
     Absolute,
+    Fill,
     Relative,
     Separator
 }

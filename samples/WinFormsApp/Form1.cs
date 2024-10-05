@@ -11,38 +11,22 @@ namespace WinFormsApp
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            var tablePanel = new TablePanel
-            {
-                Dock = DockStyle.Fill,
-                ShowGrid = DefaultBoolean.True
-            };
+            var tablePanel = new TablePanel();
 
             // Добавляем строки
-            tablePanel.AddRow(TablePanelEntityStyle.Relative, 1f);
-            tablePanel.AddRow(TablePanelEntityStyle.Absolute, 150);
-            tablePanel.AddRow(TablePanelEntityStyle.Absolute, 300);
+            tablePanel.AddRow(TablePanelEntityStyle.Absolute, 100); // Фиксированная высота
+            tablePanel.AddRow(TablePanelEntityStyle.Relative, 0);   // Относительная высота
+            tablePanel.AddRow(TablePanelEntityStyle.Separator, 0);  // Разделитель
+            tablePanel.AddRow(TablePanelEntityStyle.Fill, 0);   // Автоматический размер
 
-            // Добавляем столбцы
-            tablePanel.AddColumn(TablePanelEntityStyle.Relative, 1f);
-            tablePanel.AddColumn(TablePanelEntityStyle.Relative, 1f);
-
-            // Добавляем контролы в ячейки
-            var panel1 = new Panel { BackColor = Color.LightYellow };
-            var panel2 = new Panel { BackColor = Color.LightBlue };
-            var panel3 = new Panel { BackColor = Color.LightGray };
-
-            tablePanel.SetCell(panel1, 0, 0);
-            tablePanel.SetCell(panel2, 1, 1);
-            tablePanel.SetCell(panel3, 2, 0);
-
-            // Добавляем TablePanel на форму
-            this.Controls.Add(tablePanel);
+            // Добавляем колонки
+            tablePanel.AddColumn(TablePanelEntityStyle.Absolute, 100); // Фиксированная ширина
+            tablePanel.AddColumn(TablePanelEntityStyle.Relative, 0);   // Относительная ширина
+            tablePanel.AddColumn(TablePanelEntityStyle.Separator, 0);  // Разделитель
+            tablePanel.AddColumn(TablePanelEntityStyle.Fill, 0);   // Автоматическая ширина
 
             tablePanel.BuildLayout();
+            this.Controls.Add(tablePanel);
         }
-
-
-
-
     }
 }
