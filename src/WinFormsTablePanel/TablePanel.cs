@@ -3,41 +3,41 @@ using System.ComponentModel;
 
 namespace WinFormsTablePanel;
 
-public sealed class TablePanel : UserControl
+public class TablePanel : UserControl
 {
-    private readonly TablePanelRowCollection _rows;
-    private readonly TablePanelColumnCollection _columns;
+    private readonly TablePanelRowCollection rows;
+    private readonly TablePanelColumnCollection columns;
 
     public TablePanel()
     {
-        _rows = new TablePanelRowCollection();
-        _columns = new TablePanelColumnCollection();
+        rows = new TablePanelRowCollection();
+        columns = new TablePanelColumnCollection();
         Dock = DockStyle.Fill;
     }
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public TablePanelRowCollection Rows => _rows;
+    public TablePanelRowCollection Rows => rows;
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    public TablePanelColumnCollection Columns => _columns;
+    public TablePanelColumnCollection Columns => columns;
 
     public DefaultBoolean ShowGrid { get; set; } = DefaultBoolean.Default;
 
     public void AddRow(TablePanelEntityStyle style, float height, bool visible = true)
     {
         var newRow = new TablePanelRow(style, height, visible);
-        for (var i = 0; i < _columns.Count; i++)
+        for (int i = 0; i < columns.Count; i++)
         {
             newRow.Cells.Add(null);
         }
-        _rows.Add(newRow);
+        rows.Add(newRow);
     }
 
     public void AddColumn(TablePanelEntityStyle style, float width, bool visible = true)
     {
         var newColumn = new TablePanelColumn(style, width, visible);
-        _columns.Add(newColumn);
-        foreach (var row in _rows)
+        columns.Add(newColumn);
+        foreach (var row in rows)
         {
             row.Cells.Add(null);
         }
@@ -45,56 +45,82 @@ public sealed class TablePanel : UserControl
 
     public void SetCell(Control control, int row, int column)
     {
-        if (row >= _rows.Count || column >= _columns.Count)
+        if (row >= rows.Count || column >= columns.Count)
         {
             throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
         }
 
-        var targetRow = _rows[row];
+        var targetRow = rows[row];
         targetRow.Cells[column] = control;
         Controls.Add(control);
+    }
+
+    public void AddCell(int row, int column, Control control)
+    {
+        if (row >= rows.Count || column >= columns.Count)
+        {
+            throw new ArgumentOutOfRangeException(nameof(row), "Row or column index is out of range.");
+        }
+
+        rows[row].Cells[column] = control;
     }
 
     public void BuildLayout()
     {
         Controls.Clear();
 
-        // Создание строк
-        foreach (var row in _rows)
+        // Создание строк и ячеек
+        foreach (var row in rows)
         {
-            if (row.Style == TablePanelEntityStyle.Absolute)
+            Panel rowPanel = null;
+
+            switch (row.Style)
             {
-                Panel rowPanel = new()
+                case TablePanelEntityStyle.Absolute:
+                    rowPanel = new()
+                    {
+                        Height = (int)row.Height,
+                        Dock = DockStyle.Top,
+                        BackColor = row.Visible ? Color.LightBlue : Color.Transparent
+                    };
+                    Controls.Add(rowPanel);
+                    break;
+                case TablePanelEntityStyle.Relative:
+                case TablePanelEntityStyle.Fill:
+                    rowPanel = new()
+                    {
+                        Dock = DockStyle.Top,
+                        BackColor = row.Visible ? Color.LightGreen : Color.Transparent
+                    };
+                    Controls.Add(rowPanel);
+                    break;
+                case TablePanelEntityStyle.Separator:
                 {
-                    Height = (int)row.Height,
-                    Dock = DockStyle.Top,
-                    BackColor = row.Visible ? Color.LightBlue : Color.Transparent
-                };
-                Controls.Add(rowPanel);
+                    Splitter splitter = new()
+                    {
+                        Dock = DockStyle.Top,
+                        Height = 6,
+                        BackColor = Color.Gray
+                    };
+                    Controls.Add(splitter);
+                    continue;
+                }
             }
-            else if (row.Style == TablePanelEntityStyle.Relative || row.Style == TablePanelEntityStyle.Fill)
+
+            // Добавление ячеек в строки
+            for (var columnIndex = 0; columnIndex < columns.Count; columnIndex++)
             {
-                Panel rowPanel = new()
+                var cellControl = row.Cells[columnIndex];
+                if (cellControl != null)
                 {
-                    Dock = DockStyle.Top,
-                    BackColor = row.Visible ? Color.LightGreen : Color.Transparent
-                };
-                Controls.Add(rowPanel);
-            }
-            else if (row.Style == TablePanelEntityStyle.Separator)
-            {
-                Splitter splitter = new()
-                {
-                    Dock = DockStyle.Top,
-                    Height = 6,
-                    BackColor = Color.Gray
-                };
-                Controls.Add(splitter);
+                    cellControl.Dock = DockStyle.Left;
+                    rowPanel.Controls.Add(cellControl);
+                }
             }
         }
 
         // Создание колонок
-        foreach (var column in _columns)
+        foreach (var column in columns)
         {
             switch (column.Style)
             {
@@ -109,7 +135,8 @@ public sealed class TablePanel : UserControl
                     Controls.Add(colPanel);
                     break;
                 }
-                case TablePanelEntityStyle.Relative or TablePanelEntityStyle.Fill:
+                case TablePanelEntityStyle.Relative:
+                case TablePanelEntityStyle.Fill:
                 {
                     Panel colPanel = new()
                     {
