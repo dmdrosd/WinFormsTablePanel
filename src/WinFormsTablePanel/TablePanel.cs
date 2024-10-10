@@ -1,30 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Windows.Forms;
-
-namespace WinFormsTablePanel
+﻿namespace WinFormsTablePanel
 {
     public class TablePanel : UserControl
     {
-        private readonly List<TablePanelRow> rows = new();
+        // Поля
+        private readonly List<TablePanelRow> _rows = new();
 
+        // Конструктор
         public TablePanel()
         {
             Dock = DockStyle.Fill;
         }
 
-        public List<TablePanelRow> Rows => rows;
+        // Свойства
+        public List<TablePanelRow> Rows => _rows;
         public DefaultBoolean ShowGrid { get; set; }
 
+        // Методы
         public void ApplyStructure(TablePanelStructure structure)
         {
-            rows.Clear();
-            foreach (var row in structure.Rows)
-            {
-                rows.Add(row);
-            }
+            _rows.Clear();
+            _rows.AddRange(structure.Rows);
 
             BuildLayout();
         }
@@ -33,7 +28,7 @@ namespace WinFormsTablePanel
         {
             Controls.Clear();
 
-            foreach (var row in rows)
+            foreach (var row in _rows)
             {
                 if (row.Style == TablePanelEntityStyle.Separator)
                 {
@@ -116,4 +111,5 @@ namespace WinFormsTablePanel
             }
         }
     }
+
 }
