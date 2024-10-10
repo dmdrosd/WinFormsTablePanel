@@ -102,105 +102,105 @@ namespace WinFormsApp
                                     }
                                 },
                                 // Row 2: Content and Properties
-new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
-{
-    Cells = new List<TablePanelCell>
-    {
-        // Content Cell
-        new TablePanelCell
-        {
-            Style = TablePanelEntityStyle.Fill,
-            Dock = DockStyle.Fill,
-            Visible = true,
-            BackColor = Color.White,
-            ChildStructure = new TablePanelStructure
-            {
-                Rows = new List<TablePanelRow>
-                {
-                    // Master Row
-                    new TablePanelRow(TablePanelEntityStyle.Absolute, 150, true)
-                    {
-                        Cells = new List<TablePanelCell>
-                        {
-                            new TablePanelCell
-                            {
-                                Text = "Master",
-                                Style = TablePanelEntityStyle.Fill,
-                                Dock = DockStyle.Fill,
-                                Visible = true,
-                                BackColor = Color.LightYellow
-                            }
-                        }
-                    },
-                    // Separator between Master and Detail (Horizontal)
-                    new TablePanelRow(TablePanelEntityStyle.Separator, 6, true),
-                    // Detail Row
-                    new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
-                    {
-                        Cells = new List<TablePanelCell>
-                        {
-                            new TablePanelCell
-                            {
-                                Text = "Detail",
-                                Style = TablePanelEntityStyle.Fill,
-                                Dock = DockStyle.Fill,
-                                Visible = true,
-                                BackColor = Color.White
-                            }
-                        }
-                    }
-                }
-            }
-        },
-        // Separator between Content and Properties (Vertical)
-        new TablePanelCell
-        {
-            Style = TablePanelEntityStyle.Separator
-        },
-        // Properties Cell
-        new TablePanelCell
-        {
-            Style = TablePanelEntityStyle.Absolute,
-            Width = 200,
-            Dock = DockStyle.Right,
-            Visible = true,
-            BackColor = Color.LightGray,
-            ChildStructure = new TablePanelStructure
-            {
-                Rows = new List<TablePanelRow>
-                {
-                    new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
-                    {
-                        Cells = new List<TablePanelCell>
-                        {
-                            new TablePanelCell
-                            {
-                                Text = "Properties",
-                                Style = TablePanelEntityStyle.Fill,
-                                Dock = DockStyle.Fill,
-                                Visible = true,
-                                BackColor = Color.LightGray
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-,
-                                // Row 3: Footer
+                                new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+                                {
+                                    Cells = new List<TablePanelCell>
+                                    {
+                                        // Content Cell
+                                        new TablePanelCell
+                                        {
+                                            Style = TablePanelEntityStyle.Fill,
+                                            Dock = DockStyle.Fill,
+                                            Visible = true,
+                                            BackColor = Color.White,
+                                            ChildStructure = new TablePanelStructure
+                                            {
+                                                Rows = new List<TablePanelRow>
+                                                {
+                                                    // Master Row
+                                                    new TablePanelRow(TablePanelEntityStyle.Absolute, 150, true)
+                                                    {
+                                                        Cells = new List<TablePanelCell>
+                                                        {
+                                                            new TablePanelCell
+                                                            {
+                                                                Text = "Master",
+                                                                Style = TablePanelEntityStyle.Fill,
+                                                                Dock = DockStyle.Fill,
+                                                                Visible = true,
+                                                                BackColor = Color.LightYellow
+                                                            }
+                                                        }
+                                                    },
+                                                    // Separator between Master and Detail (Horizontal)
+                                                    new TablePanelRow(TablePanelEntityStyle.Separator, 6, true),
+                                                    // Detail Row
+                                                    new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+                                                    {
+                                                        Cells = new List<TablePanelCell>
+                                                        {
+                                                            new TablePanelCell
+                                                            {
+                                                                Text = "Detail",
+                                                                Style = TablePanelEntityStyle.Fill,
+                                                                Dock = DockStyle.Fill,
+                                                                Visible = true,
+                                                                BackColor = Color.White
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        // Separator between Content and Properties (Vertical)
+                                        new TablePanelCell
+                                        {
+                                            Style = TablePanelEntityStyle.Separator
+                                        },
+                                        // Properties Cell
+                                        new TablePanelCell
+                                        {
+                                            Style = TablePanelEntityStyle.Absolute,
+                                            Width = 200,
+                                            Dock = DockStyle.Right,
+                                            Visible = true,
+                                            BackColor = Color.LightGray,
+                                            ChildStructure = new TablePanelStructure
+                                            {
+                                                Rows = new List<TablePanelRow>
+                                                {
+                                                    new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+                                                    {
+                                                        Cells = new List<TablePanelCell>
+                                                        {
+                                                            new TablePanelCell
+                                                            {
+                                                                Text = "Properties",
+                                                                Style = TablePanelEntityStyle.Fill,
+                                                                Dock = DockStyle.Fill,
+                                                                Visible = true,
+                                                                BackColor = Color.LightGray
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                // Row 3: Footer (Optional)
+                                // Если этот футер не нужен, вы можете удалить этот блок
                                 new TablePanelRow(TablePanelEntityStyle.Absolute, 30, true)
                                 {
                                     Cells = new List<TablePanelCell>
                                     {
                                         new TablePanelCell
                                         {
-                                            Text = "Footer",
+                                            Text = "Inner Footer",
                                             Style = TablePanelEntityStyle.Fill,
                                             Dock = DockStyle.Fill,
                                             Visible = true,
-                                            BackColor = Color.LightGreen
+                                            BackColor = Color.Green
                                         }
                                     }
                                 }
@@ -233,11 +233,6 @@ new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
             // Добавляем TablePanel на форму
             Controls.Add(tablePanel);
         }
-
-
-
-
-
 
 
     }

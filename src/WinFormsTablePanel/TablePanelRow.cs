@@ -16,6 +16,9 @@ using WinFormsTablePanel;
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public List<TablePanelCell> Cells { get; set; }
 
+        public RowStatus Status { get; set; }
+        public int CalculatedHeight { get; set; }
+
         /// <summary>
         /// Убедимся, что количество ячеек соответствует количеству столбцов.
         /// Добавляем null, если ячеек меньше, чем столбцов.
