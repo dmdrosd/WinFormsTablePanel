@@ -3,7 +3,7 @@
 public enum TablePanelEntityStyle
 {
     Absolute,
-    Fill,
     Relative,
+    Fill,
     Separator
 }

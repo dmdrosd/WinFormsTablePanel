@@ -2,5 +2,4 @@
 
 public class TablePanelColumnCollection : List<TablePanelColumn>
 {
-    public TablePanelColumnCollection() { }
 }

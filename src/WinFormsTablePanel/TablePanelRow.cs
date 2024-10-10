@@ -1,19 +1,30 @@
-﻿using WinFormsTablePanel;
+﻿using System.ComponentModel;
+using WinFormsTablePanel;
 
-public class TablePanelRow
-{
-    public TablePanelEntityStyle Style { get; set; }
-    public float Height { get; set; }
-    public bool Visible { get; set; }
-    public List<TablePanelCell> Cells { get; set; }
-    public RowStatus Status { get; set; } // Новый статус строки
-    public int CalculatedHeight { get; set; } // Для хранения вычисленной высоты относительных строк
 
-    public TablePanelRow(TablePanelEntityStyle style, float height, bool visible)
+    public class TablePanelRow : TablePanelEntity
     {
-        Style = style;
-        Height = height;
-        Visible = visible;
-        Cells = new List<TablePanelCell>();
+        public TablePanelRow(TablePanelEntityStyle style, float height, bool visible)
+            : base(style, visible)
+        {
+            this.Height = height;
+            this.Cells = new List<TablePanelCell>();
+        }
+
+        public float Height { get; set; }
+
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public List<TablePanelCell> Cells { get; set; }
+
+        /// <summary>
+        /// Убедимся, что количество ячеек соответствует количеству столбцов.
+        /// Добавляем null, если ячеек меньше, чем столбцов.
+        /// </summary>
+        public void EnsureCells(int columnCount)
+        {
+            while (Cells.Count < columnCount)
+            {
+                Cells.Add(null); // Добавляем пустые ячейки
+            }
+        }
     }
-}

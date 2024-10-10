@@ -1,8 +1,8 @@
-﻿namespace WinFormsTablePanel;
+﻿    namespace WinFormsTablePanel;
 
 public enum RowStatus
 {
     Top,
-    Bottom,
-    Fill
+    Fill,
+    Bottom
 }

@@ -1,12 +1,15 @@
 ﻿namespace WinFormsTablePanel;
 
-public class TablePanelColumn : TablePanelEntity
+public class TablePanelColumn
 {
-    public TablePanelColumn(TablePanelEntityStyle style, float width, bool visible)
-        : base(style, visible)
-    {
-        this.Width = width;
-    }
-
+    public TablePanelEntityStyle Style { get; set; }
     public float Width { get; set; }
+    public bool Visible { get; set; }
+
+    public TablePanelColumn(TablePanelEntityStyle style, float width, bool visible)
+    {
+        Style = style;
+        Width = width;
+        Visible = visible;
+    }
 }
