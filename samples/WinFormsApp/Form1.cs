@@ -17,50 +17,244 @@ namespace WinFormsApp
                 ShowGrid = DefaultBoolean.True
             };
 
-            // Создаём структуру
+            // Главная структура
             var structure = new TablePanelStructure
             {
                 Rows = new List<TablePanelRow>
+        {
+            // Header
+            new TablePanelRow(TablePanelEntityStyle.Absolute, 50, true)
+            {
+                Cells = new List<TablePanelCell>
                 {
-                    new(TablePanelEntityStyle.Absolute, 200, true)
+                    new TablePanelCell
                     {
-                        Cells = new List<TablePanelCell>
+                        Text = "Header",
+                        BackColor = Color.IndianRed,
+                        Style = TablePanelEntityStyle.Fill,
+                        Visible = true,
+                        Dock = DockStyle.Fill
+                    }
+                }
+            },
+            // Main Content Row
+            new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+            {
+                Cells = new List<TablePanelCell>
+                {
+                    // SideMenu Cell
+                    new TablePanelCell
+                    {
+                        Style = TablePanelEntityStyle.Absolute,
+                        Width = 200,
+                        Visible = true,
+                        Dock = DockStyle.Left,
+                        BackColor = Color.LightBlue,
+                        ChildStructure = new TablePanelStructure
                         {
-                            new() { Text = "Header 1", BackColor = Color.LightYellow, Style = TablePanelEntityStyle.Absolute, Size = 250, Visible = true },
-                            new() { Style = TablePanelEntityStyle.Separator },
-                            new() { Text = "Header 2", BackColor = Color.PaleTurquoise, Style = TablePanelEntityStyle.Relative, Size = 1f, Visible = true },
-                            new() { Style = TablePanelEntityStyle.Separator },
-                            new() { Text = "Header 3", BackColor = Color.SkyBlue, Style = TablePanelEntityStyle.Fill, Size = 0, Visible = true }
+                            Rows = new List<TablePanelRow>
+                            {
+                                new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+                                {
+                                    Cells = new List<TablePanelCell>
+                                    {
+                                        new TablePanelCell
+                                        {
+                                            Text = "SideMenu",
+                                            Style = TablePanelEntityStyle.Fill,
+                                            Dock = DockStyle.Fill,
+                                            Visible = true,
+                                            BackColor = Color.LightBlue
+                                        }
+                                    }
+                                }
+                            }
                         }
                     },
-                    new(TablePanelEntityStyle.Separator, 3, true),
-                    new(TablePanelEntityStyle.Relative, 2f, true)
+                    // Separator between SideMenu and Nested Structure
+                    new TablePanelCell
                     {
-                        Cells = new List<TablePanelCell>
-                        {
-                            new() { Text = "Content 1", BackColor = Color.LightCoral, Style = TablePanelEntityStyle.Relative, Visible = true },
-                            new() { Style = TablePanelEntityStyle.Separator },
-                            new() { Text = "Content 2", BackColor = Color.MediumSeaGreen, Style = TablePanelEntityStyle.Relative, Visible = true }
-                        }
+                        Style = TablePanelEntityStyle.Separator
                     },
-                    new(TablePanelEntityStyle.Separator, 3, true),
-                    new(TablePanelEntityStyle.Fill, 0, true)
+                    // Cell containing nested rows
+                    new TablePanelCell
                     {
-                        Cells = new List<TablePanelCell>
+                        Style = TablePanelEntityStyle.Fill,
+                        Visible = true,
+                        Dock = DockStyle.Fill,
+                        ChildStructure = new TablePanelStructure
                         {
-                            new() { Text = "Footer 1", BackColor = Color.LavenderBlush, Style = TablePanelEntityStyle.Fill, Visible = true },
-                            new() { Style = TablePanelEntityStyle.Separator },
-                            new() { Text = "Footer 2", BackColor = Color.LightSlateGray, Style = TablePanelEntityStyle.Fill, Visible = true }
+                            Rows = new List<TablePanelRow>
+                            {
+                                // Row 1: MainMenu
+                                new TablePanelRow(TablePanelEntityStyle.Absolute, 50, true)
+                                {
+                                    Cells = new List<TablePanelCell>
+                                    {
+                                        new TablePanelCell
+                                        {
+                                            Text = "MainMenu",
+                                            Style = TablePanelEntityStyle.Fill,
+                                            Dock = DockStyle.Fill,
+                                            Visible = true,
+                                            BackColor = Color.LightCoral
+                                        }
+                                    }
+                                },
+                                // Row 2: Content and Properties
+                                new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+                                {
+                                    Cells = new List<TablePanelCell>
+                                    {
+                                        // Content Cell
+                                        new TablePanelCell
+                                        {
+                                            Style = TablePanelEntityStyle.Fill,
+                                            Dock = DockStyle.Fill,
+                                            Visible = true,
+                                            BackColor = Color.White,
+                                            ChildStructure = new TablePanelStructure
+                                            {
+                                                Rows = new List<TablePanelRow>
+                                                {
+                                                    new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+                                                    {
+                                                        Cells = new List<TablePanelCell>
+                                                        {
+                                                            // Content Cell
+                                                            new TablePanelCell
+                                                            {
+                                                                Style = TablePanelEntityStyle.Fill,
+                                                                Dock = DockStyle.Fill,
+                                                                Visible = true,
+                                                                BackColor = Color.White,
+                                                                ChildStructure = new TablePanelStructure
+                                                                {
+                                                                    Rows = new List<TablePanelRow>
+                                                                    {
+                                                                        // Master Row
+                                                                        new TablePanelRow(TablePanelEntityStyle.Absolute, 150, true)
+                                                                        {
+                                                                            Cells = new List<TablePanelCell>
+                                                                            {
+                                                                                new TablePanelCell
+                                                                                {
+                                                                                    Text = "Master",
+                                                                                    Style = TablePanelEntityStyle.Fill,
+                                                                                    Dock = DockStyle.Top,
+                                                                                    Visible = true,
+                                                                                    BackColor = Color.LightYellow
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        // Splitter between Master and Detail (Horizontal)
+                                                                        new TablePanelRow(TablePanelEntityStyle.Separator, 6, true)
+                                                                        {
+                                                                            Cells = new List<TablePanelCell>
+                                                                            {
+                                                                                new TablePanelCell
+                                                                                {
+                                                                                    Style = TablePanelEntityStyle.Separator,
+                                                                                    Dock = DockStyle.Top
+                                                                                }
+                                                                            }
+                                                                        },
+                                                                        // Detail Row
+                                                                        new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+                                                                        {
+                                                                            Cells = new List<TablePanelCell>
+                                                                            {
+                                                                                new TablePanelCell
+                                                                                {
+                                                                                    Text = "Detail",
+                                                                                    Style = TablePanelEntityStyle.Fill,
+                                                                                    Dock = DockStyle.Fill,
+                                                                                    Visible = true,
+                                                                                    BackColor = Color.White
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                        // Separator between Content and Properties
+                                        new TablePanelCell
+                                        {
+                                            Style = TablePanelEntityStyle.Separator
+                                        },
+                                        // Properties Cell
+                                        new TablePanelCell
+                                        {
+                                            Style = TablePanelEntityStyle.Absolute,
+                                            Width = 200,
+                                            Dock = DockStyle.Right,
+                                            Visible = true,
+                                            BackColor = Color.LightGray,
+                                            ChildStructure = new TablePanelStructure
+                                            {
+                                                Rows = new List<TablePanelRow>
+                                                {
+                                                    new TablePanelRow(TablePanelEntityStyle.Fill, 0, true)
+                                                    {
+                                                        Cells = new List<TablePanelCell>
+                                                        {
+                                                            new TablePanelCell
+                                                            {
+                                                                Text = "Properties",
+                                                                Style = TablePanelEntityStyle.Fill,
+                                                                Dock = DockStyle.Fill,
+                                                                Visible = true,
+                                                                BackColor = Color.LightGray
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                },
+                                // Row 3: Footer
+                                new TablePanelRow(TablePanelEntityStyle.Absolute, 30, true)
+                                {
+                                    Cells = new List<TablePanelCell>
+                                    {
+                                        new TablePanelCell
+                                        {
+                                            Text = "Footer",
+                                            Style = TablePanelEntityStyle.Fill,
+                                            Dock = DockStyle.Fill,
+                                            Visible = true,
+                                            BackColor = Color.LightGreen
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
-                },
-                Columns = new List<TablePanelColumn>
-                {
-                    new TablePanelColumn(TablePanelEntityStyle.Absolute, 100, true),
-                    new TablePanelColumn(TablePanelEntityStyle.Relative, 200, true),
-                    new TablePanelColumn(TablePanelEntityStyle.Separator, 0, true),
-                    new TablePanelColumn(TablePanelEntityStyle.Fill, 0, true)
                 }
+            },
+            // Footer
+            new TablePanelRow(TablePanelEntityStyle.Absolute, 50, true)
+            {
+                Cells = new List<TablePanelCell>
+                {
+                    new TablePanelCell
+                    {
+                        Text = "Footer",
+                        BackColor = Color.LightGreen,
+                        Style = TablePanelEntityStyle.Fill,
+                        Visible = true,
+                        Dock = DockStyle.Fill
+                    }
+                }
+            }
+        }
             };
 
             // Применяем структуру и строим макет
@@ -69,6 +263,10 @@ namespace WinFormsApp
             // Добавляем TablePanel на форму
             Controls.Add(tablePanel);
         }
+
+
+
+
 
 
 

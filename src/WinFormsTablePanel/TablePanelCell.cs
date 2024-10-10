@@ -1,13 +1,18 @@
-﻿namespace WinFormsTablePanel;
+﻿using WinFormsTablePanel;
 
-// TablePanelCell.cs
 public class TablePanelCell
 {
-    public Control? Control { get; set; }
-    public TablePanel? NestedTable { get; set; }  // Возможность вложенной таблицы
-    public string? Text { get; set; }  // Текст для отображения внутри ячейки
-    public Color BackColor { get; set; } = Color.Transparent;  // Цвет фона ячейки
-    public TablePanelEntityStyle Style { get; set; } = TablePanelEntityStyle.Relative;
-    public float Size { get; set; } = 0;  // Размер ячейки в зависимости от стиля
-    public bool Visible { get; set; } = true;
+    // Существующие свойства
+    public string Text { get; set; }
+    public Control Control { get; set; }
+    public Color BackColor { get; set; }
+    public bool Visible { get; set; }
+    public TablePanelEntityStyle Style { get; set; }
+    public float Width { get; set; }
+
+    // Новое свойство для докинга
+    public DockStyle Dock { get; set; } = DockStyle.Left;
+
+    // Свойство для вложенной структуры
+    public TablePanelStructure ChildStructure { get; set; }
 }
