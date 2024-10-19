@@ -42,6 +42,13 @@ public class VerticalStackPanelBuilder : IPanelBuilder
             controls.AddRange(rowBuilder.Build());
         }
 
+        // Инвертируем всю последовательность контролов, чтобы при добавлении в Controls
+        // панели с DockStyle.Top и DockStyle.Bottom отображались правильно.
+        // Это связано с особенностями WinForms, где порядок наложения контролов зависит
+        // от порядка их добавления в Controls.
+        controls.Reverse();
+
+
         return controls;
     }
 }

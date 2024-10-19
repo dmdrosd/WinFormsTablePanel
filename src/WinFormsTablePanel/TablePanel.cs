@@ -9,9 +9,6 @@ public class TablePanel : UserControl
         var builder = new TablePanelBuilder(structure);
         var controls = builder.Build();
 
-        foreach (var control in controls)
-        {
-            Controls.Add(control);
-        }
+        Controls.AddRange(controls.ToArray());
     }
 }
