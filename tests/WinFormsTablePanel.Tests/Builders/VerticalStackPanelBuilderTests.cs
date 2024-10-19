@@ -1,4 +1,5 @@
 using Shouldly;
+using WinFormsTablePanel.Parts;
 
 namespace WinFormsTablePanel.Tests.Builders;
 
@@ -29,7 +30,7 @@ public class VerticalStackPanelBuilderTests
             }
         };
 
-        var builder = new VerticalStackPanelBuilder(structure.Rows, 500);
+        var builder = new VerticalStackPanelBuilder(structure.Rows);
 
         // Act
         var controls = builder.Build().ToList();

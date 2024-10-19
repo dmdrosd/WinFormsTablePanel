@@ -1,66 +1,47 @@
-﻿using WinFormsTablePanel;
-using WinFormsTablePanel.Builders;
+﻿using WinFormsTablePanel.Builders;
 
 public class VerticalStackPanelBuilder : IPanelBuilder
 {
-    private readonly ICollection<TablePanelRow> _rows;
-    private readonly ControlFactory _controlFactory;
-    private readonly PanelHeightCalculator _heightCalculator;
-    private readonly TablePanelRowHelper _tablePanelRowHelper;
-    private readonly int _totalHeight; // Добавляем поле для общей высоты
+    private readonly List<TablePanelRow> _rows;
+    private readonly TablePanelRowHelper _helper;
 
-    public VerticalStackPanelBuilder(ICollection<TablePanelRow> rows, int totalHeight)
+    public VerticalStackPanelBuilder(List<TablePanelRow> rows)
     {
-        _rows = rows ?? Array.Empty<TablePanelRow>();
-        _totalHeight = totalHeight; // Инициализируем общую высоту
-        _controlFactory = new ControlFactory();
-        _heightCalculator = new PanelHeightCalculator();
-        _tablePanelRowHelper = new TablePanelRowHelper(); // Поле для работы с TablePanelRowHelper
+        _rows = rows;
+        _helper = new TablePanelRowHelper();
     }
 
     public IEnumerable<Control> Build()
     {
-        var (topRows, fillRow, bottomRows) = _tablePanelRowHelper.SplitRowsByFill(_rows);
+        var controls = new List<Control>();
 
-        // Рассчитываем высоты для Relative строк, используя PanelHeightCalculator
-        var heightInfo = _heightCalculator.CalculateHeights(_rows, _totalHeight);
+        // Разделяем строки на верхние, Fill и нижние
+        var (topRows, fillRow, bottomRows) = _helper.SplitRowsByFill(_rows);
 
-        // Выдаём верхние строки
-        foreach (var control in BuildRowsWithSplitters(topRows, DockStyle.Top, heightInfo))
+        // Обрабатываем верхние панели (DockStyle.Top)
+        foreach (var row in topRows)
         {
-            yield return control;
+            var rowBuilder = new RowBuilder(row, DockStyle.Top);
+            controls.AddRange(rowBuilder.Build());
         }
 
-        // Выдаём нижние строки
-        bottomRows.Reverse();
-        foreach (var control in BuildRowsWithSplitters(bottomRows, DockStyle.Bottom, heightInfo))
+        // Обрабатываем нижние панели (DockStyle.Bottom), добавляем в обратном порядке
+        var bottomControls = new List<Control>();
+        foreach (var row in bottomRows)
         {
-            yield return control;
+            var rowBuilder = new RowBuilder(row, DockStyle.Bottom);
+            bottomControls.AddRange(rowBuilder.Build());
         }
+        bottomControls.Reverse(); // Инвертируем порядок для правильного отображения
+        controls.AddRange(bottomControls);
 
-        // Добавляем Fill панель в конец
+        // Добавляем Fill панель (DockStyle.Fill)
         if (fillRow != null)
         {
-            yield return _controlFactory.CreatePanel(fillRow, DockStyle.Fill);
+            var rowBuilder = new RowBuilder(fillRow, DockStyle.Fill);
+            controls.AddRange(rowBuilder.Build());
         }
-    }
 
-    private IEnumerable<Control> BuildRowsWithSplitters(ICollection<TablePanelRow> rows, DockStyle dockStyle, PanelHeightInfo heightInfo)
-    {
-        foreach (var (row, splitterOn, splitterName) in _tablePanelRowHelper.GetRowPairs(rows))
-        {
-            if (row.Style == TablePanelEntityStyle.Relative)
-            {
-                // Получаем высоту для Relative строки из PanelHeightInfo
-                row.Height = heightInfo.GetHeightForRow(row);
-            }
-
-            yield return _controlFactory.CreatePanel(row, dockStyle);
-
-            if (splitterOn)
-            {
-                yield return _controlFactory.CreateSplitter(splitterName, dockStyle, (int)row.Height);
-            }
-        }
+        return controls;
     }
 }
