@@ -3,10 +3,11 @@ using WinFormsTablePanel;
 
 public class TablePanelRow : TablePanelEntity
 {
-    public float Height { get; set; }
+    public int Height { get; set; }
     public List<TablePanelCell> Cells { get; set; }
+    public Color BackColor { get; set; }
 
-    public TablePanelRow(TablePanelEntityStyle style, float height, bool visible, string name)
+    public TablePanelRow(TablePanelEntityStyle style, int height, bool visible, string name)
         : base(style, visible, name)
     {
         Height = height;

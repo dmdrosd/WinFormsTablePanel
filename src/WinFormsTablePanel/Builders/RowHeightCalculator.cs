@@ -1,15 +1,26 @@
-﻿namespace WinFormsTablePanel.Builders;
+﻿using WinFormsTablePanel;
+using WinFormsTablePanel.Builders;
+using WinFormsTablePanel.Parts;
 
-public class PanelHeightCalculator
+public class RowHeightCalculator
 {
-    public PanelHeightInfo CalculateHeights(ICollection<TablePanelRow> rows, int totalHeight)
+    private readonly int _totalHeight;
+    private readonly List<TablePanelRow> _rows;
+
+    public RowHeightCalculator(List<TablePanelRow> rows, int totalHeight)
+    {
+        _rows = rows;
+        _totalHeight = totalHeight;
+    }
+
+    public PanelHeightInfo CalculateHeights()
     {
         var heightInfo = new PanelHeightInfo();
-        var remainingHeight = totalHeight;
-        var totalRelativeWeight = rows.Where(r => r.Style == TablePanelEntityStyle.Relative).Sum(r => r.Height);
+        var remainingHeight = _totalHeight;
+        var totalRelativeWeight = _rows.Where(r => r.Style == TablePanelEntityStyle.Relative).Sum(r => r.Height);
 
         // Сначала уменьшаем высоту на все абсолютные строки
-        foreach (var row in rows)
+        foreach (var row in _rows)
         {
             if (row.Style == TablePanelEntityStyle.Absolute)
             {
@@ -19,35 +30,22 @@ public class PanelHeightCalculator
 
         // Распределяем оставшуюся высоту между Relative строками
         var distributedHeight = 0;
-        foreach (var row in rows.Where(r => r.Style == TablePanelEntityStyle.Relative))
+        foreach (var row in _rows.Where(r => r.Style == TablePanelEntityStyle.Relative))
         {
-            // Расчет высоты на основе общего веса
             var relativeHeight = (int)((row.Height / totalRelativeWeight) * remainingHeight);
             distributedHeight += relativeHeight;
-
-            // Сохраняем рассчитанную высоту для строки
             heightInfo.SetHeightForRow(row, relativeHeight);
         }
 
         // Если осталась нераспределенная высота из-за округлений, добавляем её к последней Relative строке
         var unallocatedHeight = remainingHeight - distributedHeight;
-        if (unallocatedHeight > 0 && rows.Any(r => r.Style == TablePanelEntityStyle.Relative))
+        if (unallocatedHeight > 0 && _rows.Any(r => r.Style == TablePanelEntityStyle.Relative))
         {
-            var lastRelativeRow = rows.Last(r => r.Style == TablePanelEntityStyle.Relative);
+            var lastRelativeRow = _rows.Last(r => r.Style == TablePanelEntityStyle.Relative);
             var currentHeight = heightInfo.GetHeightForRow(lastRelativeRow);
             heightInfo.SetHeightForRow(lastRelativeRow, currentHeight + unallocatedHeight);
         }
 
-        // Устанавливаем абсолютные высоты для абсолютных строк
-        foreach (var row in rows)
-        {
-            if (row.Style == TablePanelEntityStyle.Absolute)
-            {
-                heightInfo.SetHeightForRow(row, (int)row.Height);
-            }
-        }
-
         return heightInfo;
     }
-
 }

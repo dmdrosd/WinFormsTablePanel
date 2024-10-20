@@ -1,15 +1,22 @@
 ﻿using WinFormsTablePanel;
 using WinFormsTablePanel.Parts;
 
-public class TablePanelCell : TablePanelEntity
+public class TablePanelCell
 {
-    public float Width { get; set; }
-    public Control Control { get; set; }
+    public string Name { get; set; }
+    public string Text { get; set; }
+    public TablePanelEntityStyle Style { get; set; }
+    public bool Visible { get; set; } = true;
+    public double Width { get; set; }
+    public DockStyle Dock { get; set; }
+    public Color BackColor { get; set; } = Color.Transparent;
     public TablePanelStructure ChildStructure { get; set; }
+    public Control Control { get; set; }
+    public bool HasSplitter { get; set; }
+    public int SplitterHeight { get; set; }
 
-    public TablePanelCell(TablePanelEntityStyle style, float width, bool visible, string name)
-        : base(style, visible, name)
+    public TablePanelCell()
     {
-        Width = width;
+        // Значения по умолчанию можно оставить здесь
     }
 }

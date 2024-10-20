@@ -1,38 +1,41 @@
-﻿using WinFormsTablePanel;
+﻿using WinFormsTablePanel.PanelElements;
 
 public class HorizontalStackPanelBuilder : IPanelBuilder
 {
     private readonly List<TablePanelCell> _cells;
+    private readonly ControlFactory _controlFactory;
 
-    public HorizontalStackPanelBuilder(List<TablePanelCell> cells)
+    public HorizontalStackPanelBuilder(List<TablePanelCell> cells, ControlFactory controlFactory)
     {
         _cells = cells;
+        _controlFactory = controlFactory;
     }
 
-    public IEnumerable<Control> Build()
+    public IEnumerable<PanelElement> Build()
     {
-        var panel = new Panel
-        {
-            Dock = DockStyle.Fill
-        };
+        throw new NotImplementedException();
 
-        foreach (var cell in _cells)
-        {
-            var cellBuilder = new CellBuilder(cell);
-            var cellControls = cellBuilder.Build();
+        //var elements = new List<PanelElement>();
 
-            foreach (var control in cellControls)
-            {
-                if (cell.Style == TablePanelEntityStyle.Absolute)
-                {
-                    control.Width = (int)cell.Width;
-                }
+        //foreach (var cell in _cells)
+        //{
+        //    // Создаем панель для каждой ячейки через фабрику
+        //    var panel = _controlFactory.CreatePanel(cell);
 
-                control.Dock = DockStyle.Left;
-                panel.Controls.Add(control);
-            }
-        }
+        //    if (cell.HasSplitter)
+        //    {
+        //        // Если у ячейки есть сплиттер, создаем композитный элемент (панель + сплиттер)
+        //        var splitter = _controlFactory.CreateSplitterForCell(cell);
+        //        var compositeElement = _controlFactory.CreateCompositePanel(new[] { panel, splitter });
+        //        elements.Add(compositeElement);
+        //    }
+        //    else
+        //    {
+        //        // Если сплиттера нет, добавляем панель как leaf элемент
+        //        elements.Add(panel);
+        //    }
+        //}
 
-        return new List<Control> { panel };
+        //return elements;
     }
 }

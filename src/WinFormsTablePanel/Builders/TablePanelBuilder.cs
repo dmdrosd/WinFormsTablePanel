@@ -1,18 +1,22 @@
-﻿using WinFormsTablePanel.Parts;
+﻿using WinFormsTablePanel.PanelElements;
+using WinFormsTablePanel.Parts;
 
 public class TablePanelBuilder : IPanelBuilder
 {
-    private readonly TablePanelStructure _structure;
+    private readonly TablePanelStructureInfo _structureInfo;
+    private readonly ControlFactory _controlFactory;
 
-    public TablePanelBuilder(TablePanelStructure structure)
+    public TablePanelBuilder(TablePanelStructureInfo structureInfo, ControlFactory controlFactory)
     {
-        _structure = structure;
+        _structureInfo = structureInfo;
+        _controlFactory = controlFactory;
     }
 
-    public IEnumerable<Control> Build()
+    public IEnumerable<PanelElement> Build()
     {
-        // Предполагаем вертикальную ориентацию
-        var builder = new VerticalStackPanelBuilder(_structure.Rows);
-        return builder.Build();
+        var verticalBuilder = new VerticalStackPanelBuilder(_structureInfo, _controlFactory);
+        var panelElements = verticalBuilder.Build();
+
+        return panelElements;
     }
 }

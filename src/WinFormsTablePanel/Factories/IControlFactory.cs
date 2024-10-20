@@ -2,5 +2,6 @@
 
 public interface IControlFactory
 {
-    Control CreateControl(global::TablePanelEntity entity);
+    Control CreatePanel(TablePanelRow row, DockStyle dockStyle);
+    Control CreateSplitter(TablePanelRow row);
 }
