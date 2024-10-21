@@ -1,14 +1,17 @@
-﻿using WinFormsTablePanel.Builders;
+﻿using WinFormsTablePanel;
+using WinFormsTablePanel.Builders;
 
 public class VerticalStackPanelBuilder : IPanelBuilder
 {
     private readonly List<TablePanelRow> _rows;
     private readonly TablePanelRowHelper _helper;
+    private readonly ControlFactory _controlFactory;
 
     public VerticalStackPanelBuilder(List<TablePanelRow> rows)
     {
         _rows = rows;
         _helper = new TablePanelRowHelper();
+        _controlFactory = new ControlFactory();
     }
 
     public IEnumerable<Control> Build()
@@ -19,35 +22,29 @@ public class VerticalStackPanelBuilder : IPanelBuilder
         var (topRows, fillRow, bottomRows) = _helper.SplitRowsByFill(_rows);
 
         // Обрабатываем верхние панели (DockStyle.Top)
-        foreach (var row in topRows)
-        {
-            var rowBuilder = new RowBuilder(row, DockStyle.Top);
-            controls.AddRange(rowBuilder.Build());
-        }
+        controls.AddRange(topRows.Select(row =>
+            row.Style == TablePanelEntityStyle.Separator
+                ? _controlFactory.CreateSplitter(row, DockStyle.Top)
+                : _controlFactory.CreatePanel(row, DockStyle.Top)));
 
         // Обрабатываем нижние панели (DockStyle.Bottom), добавляем в обратном порядке
-        var bottomControls = new List<Control>();
-        foreach (var row in bottomRows)
-        {
-            var rowBuilder = new RowBuilder(row, DockStyle.Bottom);
-            bottomControls.AddRange(rowBuilder.Build());
-        }
-        bottomControls.Reverse(); // Инвертируем порядок для правильного отображения
+        var bottomControls = bottomRows.Select(row =>
+            row.Style == TablePanelEntityStyle.Separator
+                ? _controlFactory.CreateSplitter(row, DockStyle.Bottom)
+                : _controlFactory.CreatePanel(row, DockStyle.Bottom)).ToList();
+
+        bottomControls.Reverse();
         controls.AddRange(bottomControls);
 
         // Добавляем Fill панель (DockStyle.Fill)
         if (fillRow != null)
         {
-            var rowBuilder = new RowBuilder(fillRow, DockStyle.Fill);
-            controls.AddRange(rowBuilder.Build());
+            controls.Add(fillRow.Style == TablePanelEntityStyle.Separator
+                ? _controlFactory.CreateSplitter(fillRow, DockStyle.Fill)
+                : _controlFactory.CreatePanel(fillRow, DockStyle.Fill));
         }
 
-        // Инвертируем всю последовательность контролов, чтобы при добавлении в Controls
-        // панели с DockStyle.Top и DockStyle.Bottom отображались правильно.
-        // Это связано с особенностями WinForms, где порядок наложения контролов зависит
-        // от порядка их добавления в Controls.
         controls.Reverse();
-
 
         return controls;
     }

@@ -9,7 +9,7 @@ namespace WinFormsApp
         {
             Rows =
             [
-                new TablePanelRow(TablePanelEntityStyle.Absolute, 100, true, "Panel1_Absolute_100"),
+                new TablePanelRow(TablePanelEntityStyle.Absolute, 200, true, "Panel1_Absolute_100"),
                 new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter1"),
                 new TablePanelRow(TablePanelEntityStyle.Relative, 4, true, "Panel2_Relative_4"),
                 new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter2"),

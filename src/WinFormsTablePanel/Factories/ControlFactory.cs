@@ -1,56 +1,54 @@
-﻿using WinFormsTablePanel;
-using WinFormsTablePanel.Factories;
+﻿using WinFormsTablePanel.Parts;
+using System.Collections.Generic;
+using System.Drawing;
+using System.Linq;
+using System.Windows.Forms;
+using WinFormsTablePanel;
 
-public class ControlFactory : IControlFactory
+public class ControlFactory
 {
-    public Control CreateControl(TablePanelEntity entity)
+    public Control CreatePanel(TablePanelRow row, DockStyle dockStyle)
     {
-        if (entity.Style == TablePanelEntityStyle.Separator)
+        var panel = new Panel
         {
-            // Создаем сплиттер
-            var splitter = new Splitter
-            {
-                Name = entity.Name,
-                Dock = DockStyle.Top,
-                Height = (int)(entity is TablePanelRow row ? row.Height : 6),
-                BackColor = Color.Gray
-            };
-            return splitter;
-        }
-        else
+            Name = row.Name,
+            Dock = dockStyle,
+            BackColor = GetRowColor(row),
+            BorderStyle = BorderStyle.FixedSingle
+        };
+
+        if (row.Style == TablePanelEntityStyle.Absolute)
         {
-            // Создаем панель
-            var panel = new Panel
-            {
-                Name = entity.Name,
-                BackColor = GetPanelColor(entity),
-                BorderStyle = BorderStyle.FixedSingle
-            };
-
-            // Добавляем метку с именем панели
-            var label = new Label
-            {
-                Text = entity.Name,
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleCenter,
-                ForeColor = Color.Black,
-                BackColor = Color.Transparent
-            };
-            panel.Controls.Add(label);
-
-            return panel;
+            panel.Height = (int)row.Height;
         }
+
+        var label = new Label
+        {
+            Text = row.Name,
+            Dock = DockStyle.Fill,
+            TextAlign = ContentAlignment.MiddleCenter,
+            BackColor = Color.Transparent
+        };
+        panel.Controls.Add(label);
+
+        return panel;
     }
 
-    private Color GetPanelColor(TablePanelEntity entity)
-    {
-        // Назначаем цвета в зависимости от стиля или имени панели
-        return entity.Style switch
+    public Control CreateSplitter(TablePanelRow row, DockStyle dockStyle) =>
+        new Splitter
+        {
+            Name = row.Name,
+            Height = (int)(row.Height > 0 ? row.Height : 6),
+            Dock = dockStyle,
+            BackColor = Color.Gray
+        };
+
+    private Color GetRowColor(TablePanelRow row) =>
+        row.Style switch
         {
             TablePanelEntityStyle.Absolute => Color.LightBlue,
             TablePanelEntityStyle.Relative => Color.LightGreen,
             TablePanelEntityStyle.Fill => Color.LightYellow,
             _ => Color.LightGray
         };
-    }
 }
