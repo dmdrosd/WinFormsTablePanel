@@ -2,5 +2,5 @@
 
 public interface IControlFactory
 {
-    Control CreateControl(global::TablePanelEntity entity);
+    Control CreateControl(global::WinFormsTablePanel.Parts.TablePanelEntity entity);
 }

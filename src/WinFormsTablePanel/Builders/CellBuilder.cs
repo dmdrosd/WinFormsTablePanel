@@ -1,4 +1,5 @@
 ﻿using WinFormsTablePanel;
+using WinFormsTablePanel.Parts;
 
 public class CellBuilder : IPanelBuilder
 {
