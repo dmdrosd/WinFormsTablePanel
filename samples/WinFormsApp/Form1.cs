@@ -30,7 +30,7 @@ namespace WinFormsApp
                         new TablePanelCell("Separator1", TablePanelEntityStyle.Separator, 0),
 
                         // Cell containing nested rows
-                        new TablePanelCell("NestedRows", TablePanelEntityStyle.Fill, 0)
+                        new TablePanelCell("NestedRows", TablePanelEntityStyle.Fill, 0) 
                         {
                             ChildStructure = new TablePanelStructure
                             {

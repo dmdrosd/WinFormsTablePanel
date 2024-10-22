@@ -1,4 +1,5 @@
-﻿using WinFormsTablePanel.Parts;
+﻿using WinFormsTablePanel.Builders;
+using WinFormsTablePanel.Parts;
 
 public class TablePanelBuilder : IPanelBuilder
 {
@@ -12,7 +13,8 @@ public class TablePanelBuilder : IPanelBuilder
     public IEnumerable<Control> Build()
     {
         // Предполагаем вертикальную ориентацию
-        var builder = new VerticalStackPanelBuilder(_structure.Rows);
-        return builder.Build();
+        var builder = new VerticalStackPanelBuilder();
+
+        return builder.Build(_structure.Rows);
     }
 }

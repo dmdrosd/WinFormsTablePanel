@@ -1,4 +1,5 @@
-﻿public interface IPanelBuilder
+﻿namespace WinFormsTablePanel.Builders;
+
+public interface IPanelBuilder
 {
-    IEnumerable<Control> Build();
 }

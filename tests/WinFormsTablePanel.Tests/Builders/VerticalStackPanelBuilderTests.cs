@@ -1,4 +1,5 @@
 using Shouldly;
+using WinFormsTablePanel.Builders;
 using WinFormsTablePanel.Parts;
 
 namespace WinFormsTablePanel.Tests.Builders
@@ -29,10 +30,10 @@ namespace WinFormsTablePanel.Tests.Builders
                 ]
             };
 
-            var builder = new VerticalStackPanelBuilder(structure.Rows);
+            var builder = new VerticalStackPanelBuilder();
 
             // Act
-            var controls = builder.Build().ToList();
+            var controls = builder.Build(structure.Rows).ToList();
 
             // Check Fill panel
             controls[0].Name.ShouldBe("Panel4_Fill");

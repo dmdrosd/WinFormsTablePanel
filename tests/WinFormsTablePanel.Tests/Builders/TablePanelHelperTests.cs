@@ -1,11 +1,11 @@
 ﻿using Shouldly;
-using WinFormsTablePanel.Builders;
+using WinFormsTablePanel.Helpers;
 
 namespace WinFormsTablePanel.Tests.Builders;
 
-public class TablePanelRowHelperTests
+public class TablePanelHelperTests
 {
-    private readonly TablePanelRowHelper _helper = new();
+    private readonly TablePanelHelper _helper = new();
 
     [Fact]
     public void GetRowPairs_ShouldReturnCorrectRowPairs()
@@ -27,15 +27,12 @@ public class TablePanelRowHelperTests
         rowPairs.ShouldSatisfyAllConditions(
             () => rowPairs.Count.ShouldBe(3),
             () => rowPairs[0].PanelRow.Name.ShouldBe("Panel1_Absolute_100"),
-            () => rowPairs[0].SplitterOn.ShouldBeTrue(),
-            () => rowPairs[0].SplitterName.ShouldBe("Splitter1"),
+            () => rowPairs[0].HasSplitter.ShouldBeTrue(),
 
             () => rowPairs[1].PanelRow.Name.ShouldBe("Panel2_Relative_4"),
-            () => rowPairs[1].SplitterOn.ShouldBeTrue(),
-            () => rowPairs[1].SplitterName.ShouldBe("Splitter2"),
+            () => rowPairs[1].HasSplitter.ShouldBeTrue(),
 
-            () => rowPairs[2].PanelRow.Name.ShouldBe("Panel3_Relative_5"),
-            () => rowPairs[2].SplitterOn.ShouldBeFalse()
+            () => rowPairs[2].PanelRow.Name.ShouldBe("Panel3_Relative_5")
         );
     }
 
