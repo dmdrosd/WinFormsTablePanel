@@ -1,14 +1,8 @@
-﻿using WinFormsTablePanel;
+﻿namespace WinFormsTablePanel.Parts;
 
-public class TablePanelEntity
+public class TablePanelEntity(string name, TablePanelEntityStyle style, bool visible = true)
 {
-    public TablePanelEntityStyle Style { get; set; }
-    public bool Visible { get; set; } = true;
-    public string Name { get; set; } // Для тестирования
-    public TablePanelEntity(TablePanelEntityStyle style, bool visible, string name)
-    {
-        Style = style;
-        Visible = visible;
-        Name = name;
-    }
+    public string Name { get; set; } = name;
+    public TablePanelEntityStyle Style { get; set; } = style;
+    public bool Visible { get; set; }
 }

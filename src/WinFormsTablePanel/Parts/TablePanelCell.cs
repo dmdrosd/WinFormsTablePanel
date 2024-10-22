@@ -1,15 +1,16 @@
-﻿using WinFormsTablePanel;
-using WinFormsTablePanel.Parts;
+﻿namespace WinFormsTablePanel.Parts;
 
-public class TablePanelCell : TablePanelEntity
+public class TablePanelCell(
+    string name,
+    TablePanelEntityStyle style,
+    float width,
+    Control? control = null,
+    TablePanelStructure? childStructure = null,
+    bool visible = true)
+    : TablePanelEntity(name, style, visible)
 {
-    public float Width { get; set; }
-    public Control Control { get; set; }
-    public TablePanelStructure ChildStructure { get; set; }
-
-    public TablePanelCell(TablePanelEntityStyle style, float width, bool visible, string name)
-        : base(style, visible, name)
-    {
-        Width = width;
-    }
+    public float Width { get; set; } = width;
+    public Control? Control { get; set; } = control;
+    public TablePanelStructure? ChildStructure { get; set; } = childStructure;
+    public Color BackColor { get; set; }
 }
