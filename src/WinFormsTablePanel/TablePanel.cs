@@ -1,6 +1,10 @@
-﻿using WinFormsTablePanel.Parts;
+﻿using WinFormsTablePanel.Builders;
+using WinFormsTablePanel.Contracts;
+using WinFormsTablePanel.Parts;
 
-public class TablePanel : UserControl
+namespace WinFormsTablePanel;
+
+public class TablePanel : UserControl, ITablePanel
 {
     public void ApplyStructure(TablePanelStructure structure)
     {
