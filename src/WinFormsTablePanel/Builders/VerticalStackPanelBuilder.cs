@@ -25,10 +25,11 @@ public class VerticalStackPanelBuilder
         // Добавляем Fill панель (DockStyle.Fill)
         if (fillRow != null)
         {
-            result.Controls.AddRange(BuildSection(new List<TablePanelRow> { fillRow }, DockStyle.Fill, false, result));
+            result.Controls.AddRange(BuildSection([fillRow], DockStyle.Fill, false, result));
         }
 
         result.Controls.Reverse();
+
         return result;
     }
 
@@ -63,11 +64,20 @@ public class VerticalStackPanelBuilder
             else
             {
                 // Создаем панель или сплиттер для строки
-                var control = row.Style == TablePanelEntityStyle.Separator
-                    ? _controlFactory.CreateSplitter(row, dockStyle)
-                    : _controlFactory.CreatePanel(row, dockStyle);
+                Control control;
+                if (row.Style == TablePanelEntityStyle.Separator)
+                {
+                    control = _controlFactory.CreateSplitter(row, dockStyle);
+                }
+                else
+                {
+                    var panel = _controlFactory.CreatePanel(row, dockStyle);
+                    result.NamedContainers[row.Name] = panel;
+                    result.NamedCells[row.Name] = panel;
 
-                result.NamedContainers[row.Name] = control;
+                    control = panel;
+                }
+
                 sectionControls.Add(control);
             }
         }

@@ -7,7 +7,7 @@ public class ControlFactory
 {
     private static readonly Random Random = new Random();
 
-    public Control CreatePanel(TablePanelRow row, DockStyle dockStyle)
+    public Panel CreatePanel(TablePanelRow row, DockStyle dockStyle)
     {
         var panel = new Panel
         {
@@ -43,7 +43,7 @@ public class ControlFactory
             BackColor = Color.Gray
         };
 
-    public Control CreatePanel(TablePanelCell cell, DockStyle dockStyle)
+    public Panel CreatePanel(TablePanelCell cell, DockStyle dockStyle)
     {
         var panel = new Panel
         {

@@ -26,7 +26,7 @@ public class TablePanelHelper
 
         if (fillIndex == -1)
         {
-            return (rows.ToList(), null, new List<TablePanelRow>());
+            return (rows.ToList(), null, []);
         }
 
         var topRows = rows.Take(fillIndex).ToList();

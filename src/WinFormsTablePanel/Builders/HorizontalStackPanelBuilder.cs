@@ -1,7 +1,8 @@
-﻿using WinFormsTablePanel.Builders;
-using WinFormsTablePanel.Factories;
+﻿using WinFormsTablePanel.Factories;
 using WinFormsTablePanel.Helpers;
 using WinFormsTablePanel.Parts;
+
+namespace WinFormsTablePanel.Builders;
 
 public class HorizontalStackPanelBuilder
 {
@@ -12,21 +13,13 @@ public class HorizontalStackPanelBuilder
     {
         var result = new PanelBuildResult();
 
-        // Разделяем ячейки на левые, Fill и правые
         var (leftCells, fillCell, rightCells) = _helper.SplitCellsByDock(cells);
 
-        // Обрабатываем левые панели (DockStyle.Left)
-        result.Controls.AddRange(leftCells.Select(cell =>
-            CreatePanelOrNestedTable(cell, DockStyle.Left, result)));
+        result.Controls.AddRange(leftCells.Select(cell => CreatePanelOrNestedTable(cell, DockStyle.Left, result)));
 
-        // Обрабатываем правые панели (DockStyle.Right), добавляем в обратном порядке
-        var rightControls = rightCells.Select(cell =>
-            CreatePanelOrNestedTable(cell, DockStyle.Right, result)).ToList();
-
-        rightControls.Reverse();
+        var rightControls = rightCells.Select(cell => CreatePanelOrNestedTable(cell, DockStyle.Right, result)).Reverse();
         result.Controls.AddRange(rightControls);
 
-        // Добавляем Fill панель (DockStyle.Fill)
         if (fillCell != null)
         {
             result.Controls.Add(CreatePanelOrNestedTable(fillCell, DockStyle.Fill, result));
@@ -53,7 +46,13 @@ public class HorizontalStackPanelBuilder
                 nestedPanel.Controls.Add(control);
             }
 
+            // Добавляем панели и контейнеры из вложенной структуры в текущий результат
             result.NamedContainers[cell.Name] = nestedPanel;
+
+            // Добавляем вложенные элементы с помощью Union
+            result.NamedContainers = result.NamedContainers.Union(nestedResult.NamedContainers).ToDictionary(x => x.Key, x => x.Value);
+            result.NamedCells = result.NamedCells.Union(nestedResult.NamedCells).ToDictionary(x => x.Key, x => x.Value);
+
             return nestedPanel;
         }
         else

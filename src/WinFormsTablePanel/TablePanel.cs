@@ -3,8 +3,8 @@ using WinFormsTablePanel.Parts;
 
 public class TablePanel : UserControl, ITablePanel
 {
-    private Dictionary<string, Control> _namedContainers = new();
-    private Dictionary<string, Control> _namedCells = new();
+    private Dictionary<string, Panel> _namedContainers = new();
+    private Dictionary<string, Panel> _namedCells = new();
 
     public void ApplyStructure(TablePanelStructure structure)
     {

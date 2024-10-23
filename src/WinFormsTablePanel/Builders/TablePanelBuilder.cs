@@ -13,6 +13,8 @@ public class TablePanelBuilder
     public PanelBuildResult Build()
     {
         var builder = new VerticalStackPanelBuilder();
-        return builder.Build(_structure.Rows);
+        var result = builder.Build(_structure.Rows);
+
+        return result;
     }
 }
