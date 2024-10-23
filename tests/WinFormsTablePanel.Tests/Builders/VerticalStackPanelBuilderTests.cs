@@ -33,7 +33,7 @@ namespace WinFormsTablePanel.Tests.Builders
             var builder = new VerticalStackPanelBuilder();
 
             // Act
-            var controls = builder.Build(structure.Rows).ToList();
+            var controls = builder.Build(structure.Rows).Controls.ToList();
 
             // Check Fill panel
             controls[0].Name.ShouldBe("Panel4_Fill");

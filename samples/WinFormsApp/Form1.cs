@@ -147,6 +147,9 @@ namespace WinFormsApp
 
             tablePanel.ApplyStructure(_tablePanelRowsStructure);
 
+            var footerPanel = tablePanel.GetNamedContainer("Footer");
+            var masterPanel = tablePanel.GetNamedCell("Master");
+
             Controls.Add(tablePanel);
         }
     }

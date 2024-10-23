@@ -4,59 +4,71 @@ using WinFormsTablePanel.Parts;
 
 namespace WinFormsTablePanel.Builders;
 
-public class VerticalStackPanelBuilder() : IPanelBuilder
+public class VerticalStackPanelBuilder
 {
     private readonly ControlFactory _controlFactory = new();
-    private readonly Helpers.TablePanelHelper _helper = new();
+    private readonly TablePanelHelper _helper = new();
 
-    public IEnumerable<Control> Build(List<TablePanelRow> rows)
+    public PanelBuildResult Build(List<TablePanelRow> rows)
     {
-        var controls = new List<Control>();
+        var result = new PanelBuildResult();
 
         // Разделяем строки на верхние, Fill и нижние
         var (topRows, fillRow, bottomRows) = _helper.SplitRowsByFill(rows);
 
         // Обрабатываем верхние строки (DockStyle.Top)
-        controls.AddRange(BuildSection(topRows, DockStyle.Top, reverse: false));
+        result.Controls.AddRange(BuildSection(topRows, DockStyle.Top, false, result));
 
         // Обрабатываем нижние строки (DockStyle.Bottom), с инверсией
-        controls.AddRange(BuildSection(bottomRows, DockStyle.Bottom, reverse: true));
+        result.Controls.AddRange(BuildSection(bottomRows, DockStyle.Bottom, true, result));
 
         // Добавляем Fill панель (DockStyle.Fill)
         if (fillRow != null)
         {
-            controls.AddRange(BuildSection([fillRow], DockStyle.Fill, reverse: false));
+            result.Controls.AddRange(BuildSection(new List<TablePanelRow> { fillRow }, DockStyle.Fill, false, result));
         }
 
-        // Инвертируем для правильного порядка отображения
-        controls.Reverse();
-
-        return controls;
+        result.Controls.Reverse();
+        return result;
     }
 
-    // Общий метод для обработки секций, включая создание горизонтальных ячеек
-    private IEnumerable<Control> BuildSection(List<TablePanelRow> rows, DockStyle dockStyle, bool reverse)
+    private IEnumerable<Control> BuildSection(List<TablePanelRow> rows, DockStyle dockStyle, bool reverse, PanelBuildResult result)
     {
         if (reverse)
         {
-            rows.Reverse(); // Инвертируем, если необходимо
+            rows.Reverse();
         }
 
         var sectionControls = new List<Control>();
         foreach (var row in rows)
         {
-            // Если у строки есть ячейки, используем HorizontalStackPanelBuilder для построения горизонтальных ячеек
             if (row.Cells != null && row.Cells.Any())
             {
                 var horizontalBuilder = new HorizontalStackPanelBuilder();
-                sectionControls.AddRange(horizontalBuilder.Build(row.Cells));
+                var horizontalResult = horizontalBuilder.Build(row.Cells);
+                sectionControls.AddRange(horizontalResult.Controls);
+
+                // Добавляем именованные ячейки
+                foreach (var cell in horizontalResult.NamedCells)
+                {
+                    result.NamedCells[cell.Key] = cell.Value;
+                }
+
+                // Добавляем именованные контейнеры, если есть
+                foreach (var container in horizontalResult.NamedContainers)
+                {
+                    result.NamedContainers[container.Key] = container.Value;
+                }
             }
             else
             {
                 // Создаем панель или сплиттер для строки
-                sectionControls.Add(row.Style == TablePanelEntityStyle.Separator
+                var control = row.Style == TablePanelEntityStyle.Separator
                     ? _controlFactory.CreateSplitter(row, dockStyle)
-                    : _controlFactory.CreatePanel(row, dockStyle));
+                    : _controlFactory.CreatePanel(row, dockStyle);
+
+                result.NamedContainers[row.Name] = control;
+                sectionControls.Add(control);
             }
         }
 
