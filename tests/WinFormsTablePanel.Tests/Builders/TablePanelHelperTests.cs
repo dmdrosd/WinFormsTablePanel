@@ -1,5 +1,6 @@
 ﻿using Shouldly;
 using WinFormsTablePanel.Helpers;
+using WinFormsTablePanel.Parts;
 
 namespace WinFormsTablePanel.Tests.Builders;
 
@@ -13,11 +14,11 @@ public class TablePanelHelperTests
         // Arrange
         var rows = new List<TablePanelRow>
         {
-            new TablePanelRow(TablePanelEntityStyle.Absolute, 100, true, "Panel1_Absolute_100"),
-            new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter1"),
-            new TablePanelRow(TablePanelEntityStyle.Relative, 4, true, "Panel2_Relative_4"),
-            new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter2"),
-            new TablePanelRow(TablePanelEntityStyle.Relative, 5, true, "Panel3_Relative_5")
+            new TablePanelRow(TablePanelEntityStyle.Absolute, "Panel1_Absolute_100", 100, true),
+            new TablePanelRow(TablePanelEntityStyle.Separator, "Splitter1", 6, true),
+            new TablePanelRow(TablePanelEntityStyle.Relative, "Panel2_Relative_4", 4, true),
+            new TablePanelRow(TablePanelEntityStyle.Separator, "Splitter2", 6, true),
+            new TablePanelRow(TablePanelEntityStyle.Relative, "Panel3_Relative_5", 5, true)
         };
 
         // Act
@@ -42,11 +43,11 @@ public class TablePanelHelperTests
         // Arrange
         var rows = new List<TablePanelRow>
         {
-            new TablePanelRow(TablePanelEntityStyle.Absolute, 100, true, "Panel1_Absolute_100"),
-            new TablePanelRow(TablePanelEntityStyle.Relative, 4, true, "Panel2_Relative_4"),
-            new TablePanelRow(TablePanelEntityStyle.Fill, 0, true, "Panel3_Fill"),
-            new TablePanelRow(TablePanelEntityStyle.Relative, 5, true, "Panel4_Relative_5"),
-            new TablePanelRow(TablePanelEntityStyle.Absolute, 50, true, "Panel5_Absolute_50")
+            new TablePanelRow(TablePanelEntityStyle.Absolute, "Panel1_Absolute_100", 100, true),
+            new TablePanelRow(TablePanelEntityStyle.Relative, "Panel2_Relative_4", 4, true),
+            new TablePanelRow(TablePanelEntityStyle.Fill, "Panel3_Fill", 0, true),
+            new TablePanelRow(TablePanelEntityStyle.Relative, "Panel4_Relative_5", 5, true),
+            new TablePanelRow(TablePanelEntityStyle.Absolute, "Panel5_Absolute_50", 50, true)
         };
 
         // Act

@@ -1,16 +1,9 @@
-﻿using WinFormsTablePanel;
-using WinFormsTablePanel.Parts;
+﻿namespace WinFormsTablePanel.Parts;
 
-public class TablePanelRow : TablePanelEntity
+public class TablePanelRow(TablePanelEntityStyle style, string name, float height, bool visible = true)
+    : TablePanelEntity(name, style, visible)
 {
-    public float Height { get; set; }
-    public List<TablePanelCell> Cells { get; set; }
+    public float Height { get; set; } = height;
+    public List<TablePanelCell> Cells { get; set; } = new();
     public Color BackColor { get; set; }
-
-    public TablePanelRow(TablePanelEntityStyle style, float height, bool visible, string name)
-        : base(name, style, visible)
-    {
-        Height = height;
-        Cells = new List<TablePanelCell>();
-    }
 }

@@ -10,13 +10,13 @@ namespace WinFormsApp
             Rows =
             [
                 // Header
-                new TablePanelRow(TablePanelEntityStyle.Absolute, 50, true, "Header")
+                new TablePanelRow(TablePanelEntityStyle.Absolute, "Header", 50, true)
                 {
                     BackColor = Color.IndianRed
                 },
 
                 // Main Content Row
-                new TablePanelRow(TablePanelEntityStyle.Fill, 0, true, "Main Content")
+                new TablePanelRow(TablePanelEntityStyle.Fill, "Main Content", 0, true)
                 {
                     Cells =
                     [
@@ -37,7 +37,7 @@ namespace WinFormsApp
                                 Rows =
                                 [
                                     // Row 1: MainMenu
-                                    new TablePanelRow(TablePanelEntityStyle.Absolute, 50, true, "MainMenu")
+                                    new TablePanelRow(TablePanelEntityStyle.Absolute, "MainMenu", 50, true)
                                     {
                                         Cells =
                                         [
@@ -49,7 +49,7 @@ namespace WinFormsApp
                                     },
 
                                     // Row 2: Content and Properties
-                                    new TablePanelRow(TablePanelEntityStyle.Fill, 0, true, "Content")
+                                    new TablePanelRow(TablePanelEntityStyle.Fill, "Content", 0, true)
                                     {
                                         Cells =
                                         [
@@ -62,30 +62,18 @@ namespace WinFormsApp
                                                     Rows =
                                                     [
                                                         // Master Row
-                                                        new TablePanelRow(TablePanelEntityStyle.Absolute, 150, true, "Master")
+                                                        new TablePanelRow(TablePanelEntityStyle.Absolute, "Master", 150, true)
                                                         {
-                                                            Cells =
-                                                            [
-                                                                new TablePanelCell("MasterCell", TablePanelEntityStyle.Fill, 0)
-                                                                {
-                                                                    BackColor = Color.LightYellow
-                                                                }
-                                                            ]
+                                                            BackColor = Color.LightYellow
                                                         },
 
                                                         // Separator between Master and Detail
-                                                        new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Master-Detail Splitter"),
+                                                        new TablePanelRow(TablePanelEntityStyle.Separator, "Master-Detail Splitter", 6, true),
 
                                                         // Detail Row
-                                                        new TablePanelRow(TablePanelEntityStyle.Fill, 0, true, "Detail")
+                                                        new TablePanelRow(TablePanelEntityStyle.Fill, "Detail", 0, true)
                                                         {
-                                                            Cells =
-                                                            [
-                                                                new TablePanelCell("DetailCell", TablePanelEntityStyle.Fill, 0)
-                                                                {
-                                                                    BackColor = Color.White
-                                                                }
-                                                            ]
+                                                            BackColor = Color.White
                                                         }
                                                     ]
                                                 }
@@ -102,7 +90,7 @@ namespace WinFormsApp
                                                 {
                                                     Rows =
                                                     [
-                                                        new TablePanelRow(TablePanelEntityStyle.Fill, 0, true, "PropertiesRow")
+                                                        new TablePanelRow(TablePanelEntityStyle.Fill, "PropertiesRow", 0, true)
                                                         {
                                                             Cells =
                                                             [
@@ -119,7 +107,7 @@ namespace WinFormsApp
                                     },
 
                                     // Row 3: Footer (Optional)
-                                    new TablePanelRow(TablePanelEntityStyle.Absolute, 30, true, "Inner Footer")
+                                    new TablePanelRow(TablePanelEntityStyle.Absolute, "Inner Footer", 30, true)
                                     {
                                         Cells =
                                         [
@@ -136,7 +124,7 @@ namespace WinFormsApp
                 },
 
                 // Footer
-                new TablePanelRow(TablePanelEntityStyle.Absolute, 50, true, "Footer")
+                new TablePanelRow(TablePanelEntityStyle.Absolute, "Footer", 50, true)
                 {
                     BackColor = Color.LightGreen
                 }

@@ -1,4 +1,6 @@
-﻿namespace WinFormsTablePanel.Builders
+﻿using WinFormsTablePanel.Parts;
+
+namespace WinFormsTablePanel.Helpers
 {
     public class PanelHeightInfo
     {

@@ -1,9 +1,12 @@
-﻿using WinFormsTablePanel.Parts;
+﻿using System.Drawing;
+using WinFormsTablePanel.Parts;
 
 namespace WinFormsTablePanel.Factories;
 
 public class ControlFactory
 {
+    private static readonly Random Random = new Random();
+
     public Control CreatePanel(TablePanelRow row, DockStyle dockStyle)
     {
         var panel = new Panel
@@ -46,7 +49,7 @@ public class ControlFactory
         {
             Name = cell.Name,
             Dock = dockStyle,
-            BackColor = cell.BackColor != Color.Empty ? cell.BackColor : Color.LightGray,
+            BackColor = cell.BackColor != Color.Empty ? cell.BackColor : GetRandomColor(),
             BorderStyle = BorderStyle.FixedSingle,
             Width = cell.Style == TablePanelEntityStyle.Absolute ? (int)cell.Width : 0
         };
@@ -85,6 +88,11 @@ public class ControlFactory
             TablePanelEntityStyle.Absolute => Color.LightBlue,
             TablePanelEntityStyle.Relative => Color.LightGreen,
             TablePanelEntityStyle.Fill => Color.LightYellow,
-            _ => Color.LightGray
+            _ => GetRandomColor()
         };
+
+    private Color GetRandomColor()
+    {
+        return Color.FromArgb(Random.Next(256), Random.Next(256), Random.Next(256));
+    }
 }

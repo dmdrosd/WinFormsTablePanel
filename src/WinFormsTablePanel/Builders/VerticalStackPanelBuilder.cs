@@ -1,5 +1,6 @@
 ﻿using WinFormsTablePanel.Factories;
 using WinFormsTablePanel.Helpers;
+using WinFormsTablePanel.Parts;
 
 namespace WinFormsTablePanel.Builders;
 

@@ -14,19 +14,19 @@ namespace WinFormsTablePanel.Tests.Builders
             {
                 Rows =
                 [
-                    new TablePanelRow(TablePanelEntityStyle.Absolute, 100, true, "Panel1_Absolute_100"),
-                    new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter1"),
-                    new TablePanelRow(TablePanelEntityStyle.Relative, 4, true, "Panel2_Relative_4"),
-                    new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter2"),
-                    new TablePanelRow(TablePanelEntityStyle.Relative, 5, true, "Panel3_Relative_5"),
-                    new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter3"),
+                    new TablePanelRow(TablePanelEntityStyle.Absolute, "Panel1_Absolute_100", 100, true),
+                    new TablePanelRow(TablePanelEntityStyle.Separator, "Splitter1", 6, true),
+                    new TablePanelRow(TablePanelEntityStyle.Relative, "Panel2_Relative_4", 4, true),
+                    new TablePanelRow(TablePanelEntityStyle.Separator, "Splitter2", 6, true),
+                    new TablePanelRow(TablePanelEntityStyle.Relative, "Panel3_Relative_5", 5, true),
+                    new TablePanelRow(TablePanelEntityStyle.Separator, "Splitter3", 6, true),
                     // Fill panel
-                    new TablePanelRow(TablePanelEntityStyle.Fill, 0, true, "Panel4_Fill"),
+                    new TablePanelRow(TablePanelEntityStyle.Fill, "Panel4_Fill", 0, true),
                     // Bottom panels
-                    new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter5"),
-                    new TablePanelRow(TablePanelEntityStyle.Relative, 3, true, "Panel5_Relative_3"),
-                    new TablePanelRow(TablePanelEntityStyle.Separator, 6, true, "Splitter6"),
-                    new TablePanelRow(TablePanelEntityStyle.Absolute, 50, true, "Panel6_Absolute_50")
+                    new TablePanelRow(TablePanelEntityStyle.Separator, "Splitter5", 6, true),
+                    new TablePanelRow(TablePanelEntityStyle.Relative, "Panel5_Relative_3", 3, true),
+                    new TablePanelRow(TablePanelEntityStyle.Separator, "Splitter6", 6, true),
+                    new TablePanelRow(TablePanelEntityStyle.Absolute, "Panel6_Absolute_50", 50, true)
                 ]
             };
 

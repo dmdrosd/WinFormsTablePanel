@@ -1,4 +1,6 @@
-﻿namespace WinFormsTablePanel.Builders;
+﻿using WinFormsTablePanel.Parts;
+
+namespace WinFormsTablePanel.Helpers;
 
 public class PanelHeightCalculator
 {
@@ -22,7 +24,7 @@ public class PanelHeightCalculator
         foreach (var row in rows.Where(r => r.Style == TablePanelEntityStyle.Relative))
         {
             // Расчет высоты на основе общего веса
-            var relativeHeight = (int)((row.Height / totalRelativeWeight) * remainingHeight);
+            var relativeHeight = (int)(row.Height / totalRelativeWeight * remainingHeight);
             distributedHeight += relativeHeight;
 
             // Сохраняем рассчитанную высоту для строки
