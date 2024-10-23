@@ -1,4 +1,4 @@
-﻿namespace WinFormsTablePanel.Builders;
+﻿namespace WinFormsTablePanel.Contracts;
 
 public interface IPanelBuilder
 {

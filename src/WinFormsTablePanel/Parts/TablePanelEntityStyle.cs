@@ -1,4 +1,4 @@
-﻿namespace WinFormsTablePanel;
+﻿namespace WinFormsTablePanel.Parts;
 
 public enum TablePanelEntityStyle
 {

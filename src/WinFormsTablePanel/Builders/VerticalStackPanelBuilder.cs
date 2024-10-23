@@ -43,7 +43,7 @@ public class VerticalStackPanelBuilder
         var sectionControls = new List<Control>();
         foreach (var row in rows)
         {
-            if (row.Cells != null && row.Cells.Any())
+            if (row.Cells.Any())
             {
                 var horizontalBuilder = new HorizontalStackPanelBuilder();
                 var horizontalResult = horizontalBuilder.Build(row.Cells);

@@ -7,7 +7,7 @@ public class TablePanelHelper
     // Для строк панели
     public IEnumerable<(TablePanelRow PanelRow, bool HasSplitter)> GetRowPairs(ICollection<TablePanelRow> rows)
     {
-        for (int i = 0; i < rows.Count; i++)
+        for (var i = 0; i < rows.Count; i++)
         {
             var currentRow = rows.ElementAt(i);
             if (currentRow.Style == TablePanelEntityStyle.Separator)
@@ -39,7 +39,7 @@ public class TablePanelHelper
     // Для ячеек панели
     public IEnumerable<(TablePanelCell Cell, bool HasSeparator)> GetCellPairs(ICollection<TablePanelCell> cells)
     {
-        for (int i = 0; i < cells.Count; i++)
+        for (var i = 0; i < cells.Count; i++)
         {
             var currentCell = cells.ElementAt(i);
             if (currentCell.Style == TablePanelEntityStyle.Separator)

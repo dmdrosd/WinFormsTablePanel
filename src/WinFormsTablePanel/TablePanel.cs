@@ -1,5 +1,8 @@
-﻿using WinFormsTablePanel.Contracts;
+﻿using WinFormsTablePanel.Builders;
+using WinFormsTablePanel.Contracts;
 using WinFormsTablePanel.Parts;
+
+namespace WinFormsTablePanel;
 
 public class TablePanel : UserControl, ITablePanel
 {
@@ -19,13 +22,13 @@ public class TablePanel : UserControl, ITablePanel
         Controls.AddRange(result.Controls.ToArray());
     }
 
-    public Control GetNamedContainer(string name)
+    public Control? GetNamedContainer(string name)
     {
-        return _namedContainers.TryGetValue(name, out var container) ? container : null;
+        return _namedContainers.GetValueOrDefault(name);
     }
 
-    public Control GetNamedCell(string name)
+    public Control? GetNamedCell(string name)
     {
-        return _namedCells.TryGetValue(name, out var cell) ? cell : null;
+        return _namedCells.GetValueOrDefault(name);
     }
 }

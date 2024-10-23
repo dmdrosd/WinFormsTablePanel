@@ -4,6 +4,6 @@ public class TablePanelRow(TablePanelEntityStyle style, string name, float heigh
     : TablePanelEntity(name, style, visible)
 {
     public float Height { get; set; } = height;
-    public List<TablePanelCell> Cells { get; set; } = new();
+    public List<TablePanelCell> Cells { get; init; } = [];
     public Color BackColor { get; set; }
 }

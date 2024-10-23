@@ -2,5 +2,5 @@
 
 public class TablePanelStructure
 {
-    public List<TablePanelRow> Rows { get; set; } = new List<TablePanelRow>();
+    public List<TablePanelRow> Rows { get; init; } = [];
 }

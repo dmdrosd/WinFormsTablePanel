@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using WinFormsTablePanel.Parts;
+﻿using WinFormsTablePanel.Parts;
 
 namespace WinFormsTablePanel.Factories;
 
@@ -73,20 +72,11 @@ public class ControlFactory
         return panel;
     }
 
-    public Control CreateSplitter(TablePanelCell cell, DockStyle dockStyle) =>
-        new Splitter
-        {
-            Name = cell.Name,
-            Width = (int)(cell.Width > 0 ? cell.Width : 6),
-            Dock = dockStyle,
-            BackColor = Color.Gray
-        };
-
     private Color GetRowColor(TablePanelRow row) =>
         row.Style switch
         {
-            TablePanelEntityStyle.Absolute => Color.LightBlue,
-            TablePanelEntityStyle.Relative => Color.LightGreen,
+            TablePanelEntityStyle.Absolute => GetRandomColor(),
+            TablePanelEntityStyle.Relative => GetRandomColor(),
             TablePanelEntityStyle.Fill => Color.LightYellow,
             _ => GetRandomColor()
         };

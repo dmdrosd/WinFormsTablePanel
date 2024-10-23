@@ -11,6 +11,6 @@ public class TablePanelCell(
 {
     public float Width { get; set; } = width;
     public Control? Control { get; set; } = control;
-    public TablePanelStructure? ChildStructure { get; set; } = childStructure;
-    public Color BackColor { get; set; }
+    public TablePanelStructure? ChildStructure { get; init; } = childStructure;
+    public Color BackColor { get; init; }
 }

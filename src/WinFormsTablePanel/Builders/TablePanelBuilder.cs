@@ -1,19 +1,13 @@
-﻿using WinFormsTablePanel.Builders;
-using WinFormsTablePanel.Parts;
+﻿using WinFormsTablePanel.Parts;
 
-public class TablePanelBuilder
+namespace WinFormsTablePanel.Builders;
+
+public class TablePanelBuilder(TablePanelStructure structure)
 {
-    private readonly TablePanelStructure _structure;
-
-    public TablePanelBuilder(TablePanelStructure structure)
-    {
-        _structure = structure;
-    }
-
     public PanelBuildResult Build()
     {
         var builder = new VerticalStackPanelBuilder();
-        var result = builder.Build(_structure.Rows);
+        var result = builder.Build(structure.Rows);
 
         return result;
     }
