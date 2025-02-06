@@ -1,7 +1,5 @@
 ﻿using WinFormsTablePanel.Parts;
 
-namespace WinFormsTablePanel.Factories;
-
 public class ControlFactory
 {
     private static readonly Random Random = new Random();
@@ -33,14 +31,17 @@ public class ControlFactory
         return panel;
     }
 
-    public Control CreateSplitter(TablePanelRow row, DockStyle dockStyle) =>
-        new Splitter
+    public Control CreateSplitter(TablePanelEntity entity, DockStyle dockStyle)
+    {
+        return new Splitter
         {
-            Name = row.Name,
-            Height = (int)(row.Height > 0 ? row.Height : 6),
+            Name = entity.Name,
             Dock = dockStyle,
-            BackColor = Color.Gray
+            BackColor = Color.Gray,
+            Width = dockStyle is DockStyle.Left or DockStyle.Right ? 6 : 0,
+            Height = dockStyle is DockStyle.Top or DockStyle.Bottom ? 6 : 0
         };
+    }
 
     public Panel CreatePanel(TablePanelCell cell, DockStyle dockStyle)
     {

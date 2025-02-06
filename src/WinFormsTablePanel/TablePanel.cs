@@ -22,12 +22,12 @@ public class TablePanel : UserControl, ITablePanel
         Controls.AddRange(result.Controls.ToArray());
     }
 
-    public Control? GetNamedContainer(string name)
+    public Panel? GetNamedContainer(string name)
     {
         return _namedContainers.GetValueOrDefault(name);
     }
 
-    public Control? GetNamedCell(string name)
+    public Panel? GetNamedCell(string name)
     {
         return _namedCells.GetValueOrDefault(name);
     }

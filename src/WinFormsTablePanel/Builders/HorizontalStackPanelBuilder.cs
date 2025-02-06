@@ -1,31 +1,57 @@
-﻿using WinFormsTablePanel.Factories;
+﻿using WinFormsTablePanel.Builders;
 using WinFormsTablePanel.Helpers;
 using WinFormsTablePanel.Parts;
-
-namespace WinFormsTablePanel.Builders;
 
 public class HorizontalStackPanelBuilder
 {
     private readonly ControlFactory _controlFactory = new();
     private readonly TablePanelHelper _helper = new();
 
-    public PanelBuildResult Build(List<TablePanelCell> cells)
+    public PanelBuildResult Build(List<TablePanelCell> cells, int rowHeight = 0)
     {
         var result = new PanelBuildResult();
+        var canvas = new Panel { Dock = DockStyle.Fill, AutoScroll = true };
+
+        if (rowHeight > 0)
+        {
+            canvas.Height = rowHeight;
+        }
 
         var (leftCells, fillCell, rightCells) = _helper.SplitCellsByDock(cells);
 
-        result.Controls.AddRange(leftCells.Select(cell => CreatePanelOrNestedTable(cell, DockStyle.Left, result)));
-
-        var rightControls = rightCells.Select(cell => CreatePanelOrNestedTable(cell, DockStyle.Right, result)).Reverse();
-        result.Controls.AddRange(rightControls);
-
+        canvas.Controls.AddRange(BuildSection(leftCells, DockStyle.Left, false, result).ToArray());
         if (fillCell != null)
         {
-            result.Controls.Add(CreatePanelOrNestedTable(fillCell, DockStyle.Fill, result));
+            canvas.Controls.Add(CreatePanelOrNestedTable(fillCell, DockStyle.Fill, result));
+        }
+        canvas.Controls.AddRange(BuildSection(rightCells, DockStyle.Right, false, result).ToArray());
+
+        result.Controls.Add(canvas);
+        return result;
+    }
+
+    private IEnumerable<Control> BuildSection(List<TablePanelCell> cells, DockStyle dockStyle, bool reverse, PanelBuildResult result)
+    {
+        if (reverse)
+        {
+            cells.Reverse();
         }
 
-        return result;
+        foreach (var cell in cells)
+        {
+            Control control;
+
+            if (cell.Style == TablePanelEntityStyle.Separator)
+            {
+                control = _controlFactory.CreateSplitter(cell, dockStyle);
+            }
+            else
+            {
+                control = CreatePanelOrNestedTable(cell, dockStyle, result);
+            }
+
+            yield return control;
+        }
     }
 
     private Control CreatePanelOrNestedTable(TablePanelCell cell, DockStyle dockStyle, PanelBuildResult result)
@@ -46,10 +72,7 @@ public class HorizontalStackPanelBuilder
                 nestedPanel.Controls.Add(control);
             }
 
-            // Добавляем панели и контейнеры из вложенной структуры в текущий результат
             result.NamedContainers[cell.Name] = nestedPanel;
-
-            // Добавляем вложенные элементы с помощью Union
             result.NamedContainers = result.NamedContainers.Union(nestedResult.NamedContainers).ToDictionary(x => x.Key, x => x.Value);
             result.NamedCells = result.NamedCells.Union(nestedResult.NamedCells).ToDictionary(x => x.Key, x => x.Value);
 

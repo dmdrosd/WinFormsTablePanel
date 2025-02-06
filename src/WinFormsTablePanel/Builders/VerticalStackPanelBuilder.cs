@@ -1,5 +1,4 @@
-﻿using WinFormsTablePanel.Factories;
-using WinFormsTablePanel.Helpers;
+﻿using WinFormsTablePanel.Helpers;
 using WinFormsTablePanel.Parts;
 
 namespace WinFormsTablePanel.Builders;
@@ -40,22 +39,26 @@ public class VerticalStackPanelBuilder
             rows.Reverse();
         }
 
-        var sectionControls = new List<Control>();
         foreach (var row in rows)
         {
+            Control control;
+
             if (row.Cells.Any())
             {
                 var horizontalBuilder = new HorizontalStackPanelBuilder();
-                var horizontalResult = horizontalBuilder.Build(row.Cells);
-                sectionControls.AddRange(horizontalResult.Controls);
+                var horizontalResult = horizontalBuilder.Build(row.Cells, (int)row.Height);
+                control = new Panel { Dock = dockStyle, Height = (int)row.Height };
 
-                // Добавляем именованные ячейки
+                foreach (var panel in horizontalResult.Controls)
+                {
+                    control.Controls.Add(panel);
+                }
+
                 foreach (var cell in horizontalResult.NamedCells)
                 {
                     result.NamedCells[cell.Key] = cell.Value;
                 }
 
-                // Добавляем именованные контейнеры, если есть
                 foreach (var container in horizontalResult.NamedContainers)
                 {
                     result.NamedContainers[container.Key] = container.Value;
@@ -63,25 +66,16 @@ public class VerticalStackPanelBuilder
             }
             else
             {
-                // Создаем панель или сплиттер для строки
-                Control control;
-                if (row.Style == TablePanelEntityStyle.Separator)
-                {
-                    control = _controlFactory.CreateSplitter(row, dockStyle);
-                }
-                else
-                {
-                    var panel = _controlFactory.CreatePanel(row, dockStyle);
-                    result.NamedContainers[row.Name] = panel;
-                    result.NamedCells[row.Name] = panel;
+                control = row.Style == TablePanelEntityStyle.Separator
+                    ? _controlFactory.CreateSplitter(row, dockStyle)
+                    : _controlFactory.CreatePanel(row, dockStyle);
 
-                    control = panel;
-                }
-
-                sectionControls.Add(control);
+                result.NamedContainers[row.Name] = control as Panel;
+                result.NamedCells[row.Name] = control as Panel;
             }
-        }
 
-        return sectionControls;
+            yield return control;
+        }
     }
+
 }

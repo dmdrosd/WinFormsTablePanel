@@ -13,4 +13,10 @@
     <ProjectReference Include="..\..\src\WinFormsTablePanel\WinFormsTablePanel.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Compile Update="DetailPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+  </ItemGroup>
+
 </Project>

@@ -1,3 +1,4 @@
+using System.Diagnostics.Metrics;
 using WinFormsTablePanel;
 using WinFormsTablePanel.Parts;
 
@@ -8,128 +9,174 @@ namespace WinFormsApp
         private readonly TablePanelStructure _tablePanelRowsStructure = new()
         {
             Rows =
-            [
-                // Header
-                new TablePanelRow(TablePanelEntityStyle.Absolute, "Header", 50, true)
-                {
-                    BackColor = Color.IndianRed
-                },
+    [
+        // Header
+        new TablePanelRow(TablePanelEntityStyle.Absolute, "Header", 50, true)
+            {
+                BackColor = Color.IndianRed
+            },
 
-                // Main Content Row
-                new TablePanelRow(TablePanelEntityStyle.Fill, "Main Content", 0, true)
-                {
-                    Cells =
-                    [
-                        // SideMenu Cell
-                        new TablePanelCell("SideMenu", TablePanelEntityStyle.Absolute, 200)
+            // Main Content Row
+            new TablePanelRow(TablePanelEntityStyle.Fill, "Main Content", 0, true)
+            {
+                Cells =
+                [
+                    // SideMenu Cell
+                    new TablePanelCell("SideMenu", TablePanelEntityStyle.Absolute, 200)
+                    {
+                        BackColor = Color.LightBlue
+                    },
+
+                    // Separator between SideMenu and Nested Structure
+                    new TablePanelCell("Separator1", TablePanelEntityStyle.Separator, 0),
+
+                    // Cell containing nested rows
+                    new TablePanelCell("NestedRows", TablePanelEntityStyle.Fill, 0)
+                    {
+                        ChildStructure = new TablePanelStructure
                         {
-                            BackColor = Color.LightBlue
-                        },
+                            Rows =
+                            [
+                                // Row 1: MainMenu
+                                new TablePanelRow(TablePanelEntityStyle.Absolute, "MainMenu", 50, true)
+                                {
+                                    Cells =
+                                    [
+                                        new TablePanelCell("MainMenuCell", TablePanelEntityStyle.Fill, 0)
+                                        {
+                                            BackColor = Color.LightCoral
+                                        }
+                                    ]
+                                },
 
-                        // Separator between SideMenu and Nested Structure
-                        new TablePanelCell("Separator1", TablePanelEntityStyle.Separator, 0),
-
-                        // Cell containing nested rows
-                        new TablePanelCell("NestedRows", TablePanelEntityStyle.Fill, 0) 
-                        {
-                            ChildStructure = new TablePanelStructure
-                            {
-                                Rows =
-                                [
-                                    // Row 1: MainMenu
-                                    new TablePanelRow(TablePanelEntityStyle.Absolute, "MainMenu", 50, true)
-                                    {
-                                        Cells =
-                                        [
-                                            new TablePanelCell("MainMenuCell", TablePanelEntityStyle.Fill, 0)
+                                // Row 2: Content and Properties
+                                new TablePanelRow(TablePanelEntityStyle.Fill, "Content", 0, true)
+                                {
+                                    Cells =
+                                    [
+                                        // Content Cell
+                                        new TablePanelCell("ContentCell", TablePanelEntityStyle.Fill, 0)
+                                        {
+                                            BackColor = Color.White,
+                                            ChildStructure = new TablePanelStructure
                                             {
-                                                BackColor = Color.LightCoral
+                                                Rows =
+                                                [
+                                                    // Master Row with File Storage and Content Panel
+                                                    new TablePanelRow(TablePanelEntityStyle.Absolute, "MasterRow", 150, true)
+                                                    {
+                                                        BackColor = Color.LightYellow,
+                                                        Cells =
+                                                        [
+                                                            new TablePanelCell("Master", TablePanelEntityStyle.Fill, 0)
+                                                            {
+                                                                BackColor = Color.LightYellow
+                                                            },
+                                                            new TablePanelCell("Splitter1", TablePanelEntityStyle.Separator, 6),
+                                                            new TablePanelCell("FileStorage", TablePanelEntityStyle.Absolute, 200)
+                                                            {
+                                                                BackColor = Color.LightGray
+                                                            }
+                                                        ]
+                                                    },
+
+                                                    // Separator between Master and Detail
+                                                    new TablePanelRow(TablePanelEntityStyle.Separator, "Master-Detail Splitter", 6, true),
+
+                                                    // Detail Row
+                                                    new TablePanelRow(TablePanelEntityStyle.Fill, "DetailRow", 0, true)
+                                                    {
+                                                        BackColor = Color.White
+                                                    }
+                                                ]
                                             }
-                                        ]
-                                    },
+                                        },
 
-                                    // Row 2: Content and Properties
-                                    new TablePanelRow(TablePanelEntityStyle.Fill, "Content", 0, true)
-                                    {
-                                        Cells =
-                                        [
-                                            // Content Cell
-                                            new TablePanelCell("ContentCell", TablePanelEntityStyle.Fill, 0)
+                                        // Separator between Content and Properties
+                                        new TablePanelCell("Separator2", TablePanelEntityStyle.Separator, 0),
+
+                                        // Properties Cell
+                                        new TablePanelCell("Properties", TablePanelEntityStyle.Absolute, 200)
+                                        {
+                                            BackColor = Color.LightGray,
+                                            ChildStructure = new TablePanelStructure
                                             {
-                                                BackColor = Color.White,
-                                                ChildStructure = new TablePanelStructure
-                                                {
-                                                    Rows =
-                                                    [
-                                                        // Master Row
-                                                        new TablePanelRow(TablePanelEntityStyle.Absolute, "Master", 150, true)
-                                                        {
-                                                            BackColor = Color.LightYellow
-                                                        },
-
-                                                        // Separator between Master and Detail
-                                                        new TablePanelRow(TablePanelEntityStyle.Separator, "Master-Detail Splitter", 6, true),
-
-                                                        // Detail Row
-                                                        new TablePanelRow(TablePanelEntityStyle.Fill, "Detail", 0, true)
-                                                        {
-                                                            BackColor = Color.White
-                                                        }
-                                                    ]
-                                                }
-                                            },
-
-                                            // Separator between Content and Properties
-                                            new TablePanelCell("Separator2", TablePanelEntityStyle.Separator, 0),
-
-                                            // Properties Cell
-                                            new TablePanelCell("Properties", TablePanelEntityStyle.Absolute, 200)
-                                            {
-                                                BackColor = Color.LightGray,
-                                                ChildStructure = new TablePanelStructure
-                                                {
-                                                    Rows =
-                                                    [
-                                                        new TablePanelRow(TablePanelEntityStyle.Fill, "PropertiesRow", 0, true)
-                                                        {
-                                                            Cells =
-                                                            [
-                                                                new TablePanelCell("PropertiesCell", TablePanelEntityStyle.Fill, 0)
-                                                                {
-                                                                    BackColor = Color.LightGray
-                                                                }
-                                                            ]
-                                                        }
-                                                    ]
-                                                }
+                                                Rows =
+                                                [
+                                                    new TablePanelRow(TablePanelEntityStyle.Fill, "PropertiesRow", 0, true)
+                                                    {
+                                                        Cells =
+                                                        [
+                                                            new TablePanelCell("PropertiesCell", TablePanelEntityStyle.Fill, 0)
+                                                            {
+                                                                BackColor = Color.LightGray
+                                                            }
+                                                        ]
+                                                    }
+                                                ]
                                             }
-                                        ]
-                                    },
+                                        }
+                                    ]
+                                },
 
-                                    // Row 3: Footer (Optional)
-                                    new TablePanelRow(TablePanelEntityStyle.Absolute, "Inner Footer", 30, true)
-                                    {
-                                        Cells =
-                                        [
-                                            new TablePanelCell("InnerFooterCell", TablePanelEntityStyle.Fill, 0)
-                                            {
-                                                BackColor = Color.Green
-                                            }
-                                        ]
-                                    }
-                                ]
-                            }
+                                // Row 3: Footer (Optional)
+                                new TablePanelRow(TablePanelEntityStyle.Absolute, "Inner Footer", 30, true)
+                                {
+                                    Cells =
+                                    [
+                                        new TablePanelCell("InnerFooterCell", TablePanelEntityStyle.Fill, 0)
+                                        {
+                                            BackColor = Color.Green
+                                        }
+                                    ]
+                                }
+                            ]
                         }
-                    ]
-                },
+                    }
+                ]
+            },
 
-                // Footer
-                new TablePanelRow(TablePanelEntityStyle.Absolute, "Footer", 50, true)
-                {
-                    BackColor = Color.LightGreen
-                }
-            ]
+            // Footer
+            new TablePanelRow(TablePanelEntityStyle.Absolute, "Footer", 50, true)
+            {
+                BackColor = Color.LightGreen
+            }
+    ]
         };
+
+        //private readonly TablePanelStructure _tablePanelRowsStructure = new()
+        //{
+        //    Rows =
+        //    [
+        //        // Master Row with File Storage and Content Panel
+        //        new TablePanelRow(TablePanelEntityStyle.Absolute, "Master1", 150, true)
+        //        {
+        //            BackColor = Color.LightYellow,
+        //            Cells =
+        //            [
+        //                new TablePanelCell("Master", TablePanelEntityStyle.Fill, 0)
+        //                {
+        //                    BackColor = Color.LightYellow
+        //                },
+        //                new TablePanelCell("Splitter1", TablePanelEntityStyle.Separator, 6),
+        //                new TablePanelCell("FileStorage", TablePanelEntityStyle.Absolute, 200)
+        //                {
+        //                    BackColor = Color.LightGray
+        //                }
+        //            ]
+        //        },
+
+        //        // Separator between Master and Detail
+        //        new TablePanelRow(TablePanelEntityStyle.Separator, "Master-Detail Splitter", 6, true),
+
+        //        // Detail Row
+        //        new TablePanelRow(TablePanelEntityStyle.Fill, "Detail", 0, true)
+        //        {
+        //            BackColor = Color.White
+        //        }
+        //    ]
+        //};
+
 
         public Form1()
         {
@@ -147,10 +194,37 @@ namespace WinFormsApp
 
             tablePanel.ApplyStructure(_tablePanelRowsStructure);
 
-            var footerPanel = tablePanel.GetNamedContainer("Footer");
             var masterPanel = tablePanel.GetNamedCell("Master");
+            var detailPanel = tablePanel.GetNamedCell("Detail");
+
+            //masterPanel.Controls.Add(new Panel
+            //{
+            //    Dock = DockStyle.Top, // Заполняет всю высоту родителя
+            //    Height = 200,
+            //    Controls =
+            //    {
+            //        new MasterPanel
+            //        {
+            //            Dock = DockStyle.Fill // Заполняет родительский контейнер
+            //        }
+            //    }
+            //});
+
+            //detailPanel.Controls.Add(new Panel
+            //{
+            //    Dock = DockStyle.Top,
+            //    Height = 200,
+            //    Controls =
+            //    {
+            //        new DetailPanel
+            //        {
+            //            Dock = DockStyle.Fill
+            //        }
+            //    }
+            //});
 
             Controls.Add(tablePanel);
         }
+
     }
 }
